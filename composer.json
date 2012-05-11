@@ -1,0 +1,22 @@
+{
+    "name": "itbz/httpio",
+    "description": "Simple HTTP input/output library",
+    "keywords": ["http", "input validation", "content negotiation"],
+    "homepage": "https://github.com/itbz/httpio",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hannes Forsgård",
+            "email": "hannes.forsgard@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "itbz\\httpio": "src/"
+        }
+    }
+}
