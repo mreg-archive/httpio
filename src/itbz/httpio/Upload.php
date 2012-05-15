@@ -193,6 +193,25 @@ class Upload
 
 
     /**
+     * Read contents of uploaded file
+     * @return string
+     * @throws FileUploadException if unable to read contents
+     */
+    public function getContents()
+    {
+        $tmpname = $this->getTempName();
+        $data = $this->fileGetContents($tmpname);
+        
+        if ($data === FALSE) {
+            $msg = "Unable to read uploaded file '$tmpname'";
+            throw new FileUploadException($msg);
+        }
+        
+        return $data;
+    }
+
+
+    /**
      * Wrapper to PHP native is_uploaded_file() function
      * @param string $fname
      * @return bool
@@ -245,6 +264,17 @@ class Upload
     protected function filesize($fname)
     {
         return filesize($fname);
+    }
+
+
+    /**
+     * Wrapper to PHP natvie file_get_contents() function
+     * @param string $fname
+     * @return string The data read, FALSE on failure
+     */
+    protected function fileGetContents($fname)
+    {
+        return file_get_contents($fname);
     }
 
 }
