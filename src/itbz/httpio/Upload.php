@@ -202,11 +202,6 @@ class Upload
         $tmpname = $this->getTempName();
         $data = $this->fileGetContents($tmpname);
         
-        if ($data === FALSE) {
-            $msg = "Unable to read uploaded file '$tmpname'";
-            throw new FileUploadException($msg);
-        }
-        
         return $data;
     }
 

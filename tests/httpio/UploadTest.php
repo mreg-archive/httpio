@@ -158,4 +158,12 @@ class UploadTest extends PHPUnit_Framework_TestCase
         unlink($fname);
     }
 
+
+    function testGetContents()
+    {
+        $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
+        $data = $u->getContents();
+        $this->assertEquals('', $data);
+    }
+
 }
