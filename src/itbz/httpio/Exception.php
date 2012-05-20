@@ -17,4 +17,6 @@ namespace itbz\httpio;
  * Base exception
  * @package httpio
  */
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+}

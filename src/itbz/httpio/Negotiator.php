@@ -42,16 +42,16 @@ class Negotiator
 
     /**
      * Array of supported values
-     * @var array $supported
+     * @var array $_supported
      */
-    private $supported;
+    private $_supported;
 
 
     /**
      * Complete result from the last negotiation
-     * @var array $result
+     * @var array $_result
      */
-    private $result = array();
+    private $_result = array();
 
 
     /**
@@ -62,7 +62,7 @@ class Negotiator
      */
     public function __construct(array $supported)
     {
-        $this->supported = $supported;
+        $this->_supported = $supported;
     }
 
 
@@ -73,7 +73,7 @@ class Negotiator
      */
     public function negotiate($accept)
     {
-		assert('is_string($accept)');
+        assert('is_string($accept)');
         $accept = self::parseRawAccept($accept);
         return $this->negotiateArray($accept);
     }
@@ -85,7 +85,7 @@ class Negotiator
      */
     public function getResult()
     {
-        return $this->result;
+        return $this->_result;
     }
 
 
@@ -102,58 +102,63 @@ class Negotiator
      */
     public function negotiateArray(array $accept)
     {
-        $this->result = array();
+        $this->_result = array();
         
         // Sort based on q-values
         arsort($accept, SORT_NUMERIC);
         
-        foreach ( $accept as $type => $q ) {
-            if ( $q == 0 ) continue;
-            if ( isset( $this->supported[$type] ) ) $this->result[$type] = $q;
+        foreach ($accept as $type => $q) {
+            if ($q == 0) {
+                continue;
+            }
+            if (isset( $this->_supported[$type] )) {
+                $this->_result[$type] = $q;
+            }
         }
         
-        if ( count($this->result) == 0 ) {
+        if ( count($this->_result) == 0 ) {
             // If no match use first supported
-            reset($this->supported);
-            return key($this->supported);
+            reset($this->_supported);
+            return key($this->_supported);
         } else {
             // Else return match with highest q-value
-            reset($this->result);
-            return key($this->result);
+            reset($this->_result);
+            return key($this->_result);
         }
     }
 
 
-	/**
-	 * Parses an accept string.
-	 * @param string $accept
-	 * @return array Returns an array with the accept types as keys, and
-	 * q-values as value (float).
-	 */
-	static public function parseRawAccept($accept)
-	{
-		assert('is_string($accept)');
+    /**
+     * Parses an accept string.
+     * @param string $accept
+     * @return array Returns an array with the accept types as keys, and
+     * q-values as value (float).
+     */
+    static public function parseRawAccept($accept)
+    {
+        assert('is_string($accept)');
 
         // Loop the exploded string parsing names and q-values
-		$parsed = array();
-		foreach( explode(',', $accept) as $type ) {
-			$type = explode(';', $type);
-			$name = array_shift($type);
-			$q = 1.0;
-			
-			// Loop the rest of $type trying to read q-values
-			foreach ( $type as $param ) {
-				if ( preg_match('/^\s*q\s*=\s*([0-9.]+)\s*$/', $param, $matches) ) {
-					$q = floatval($matches[1]);
-				}
-			}
-			
-			// Save result
-			$parsed[$name] = $q;
-		}
-		
-		return $parsed;
-	}
+        $parsed = array();
+        foreach (explode(',', $accept) as $type) {
+            $type = explode(';', $type);
+            $name = array_shift($type);
+            $q = 1.0;
+            
+            // Loop the rest of $type trying to read q-values
+            $qValueRegexp = '/^\s*q\s*=\s*([0-9.]+)\s*$/';
+            foreach ($type as $param) {
+                if (preg_match($qValueRegexp, $param, $matches)) {
+                    $q = floatval($matches[1]);
+                }
+            }
+            
+            // Save result
+            $parsed[$name] = $q;
+        }
+        
+        return $parsed;
+    }
 
 
     /**
@@ -167,15 +172,19 @@ class Negotiator
      * @param array $values
      * @return array
      */
-    static public function mergeRegion(array $values){
+    static public function mergeRegion(array $values)
+    {
         $arrReturn = array();
-        foreach ( $values as $key => $val ) {
-            if ( strpos($key, '-') ) {
-                list($lang, $region) = explode('-', $key);
+        foreach ($values as $key => $val) {
+            if (strpos($key, '-')) {
+                list($lang) = explode('-', $key);
             } else {
                 $lang = $key;
             }
-            if ( !array_key_exists($lang, $arrReturn) or $arrReturn[$lang] < $val ) {
+            if (
+                !array_key_exists($lang, $arrReturn)
+                || $arrReturn[$lang] < $val
+            ) {
                 $arrReturn[$lang] = $val;
             }
         }

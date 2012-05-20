@@ -32,13 +32,13 @@ class Upload
 
     /**
      * List of PHP upload error codes and descriptive messages
-     * @var array $UPLOAD_ERR_MSGS
+     * @var array $_uploadErrMsgs
      */
-    static private $UPLOAD_ERR_MSGS = array(
+    static private $_uploadErrMsgs = array(
         UPLOAD_ERR_INI_SIZE =>
-            "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
+            "Uploaded file exceeds the upload_max_filesize php directive.",
         UPLOAD_ERR_FORM_SIZE =>
-            "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
+            "Uploaded file exceeds the MAX_FILE_SIZE HTML form directive.",
         UPLOAD_ERR_PARTIAL =>
             "The uploaded file was only partially uploaded.",
         UPLOAD_ERR_NO_FILE =>
@@ -54,23 +54,23 @@ class Upload
 
     /**
      * User specified target name of file
-     * @var string $targetName
+     * @var string $_targetName
      */
-    private $targetName;
+    private $_targetName;
 
 
     /**
      * Temporary file name
-     * @var string $tempName
+     * @var string $_tempName
      */
-    private $tempName;
+    private $_tempName;
 
 
     /**
      * MIME-type of uploaded file
-     * @var string $type
+     * @var string $_type
      */
-    private $type;
+    private $_type;
 
 
     /**
@@ -92,7 +92,7 @@ class Upload
 
         // Check that upload was successfull
         if ( $error != UPLOAD_ERR_OK ) {
-            throw new FileUploadException(self::$UPLOAD_ERR_MSGS[$error]);
+            throw new FileUploadException(self::$_uploadErrMsgs[$error]);
         }
 
         // Check that file exists
@@ -122,9 +122,9 @@ class Upload
         // Sanitize name
         $targetName = filter_var($targetName, FILTER_SANITIZE_STRING);
 
-        $this->targetName = $targetName;
-        $this->tempName = $tempName;
-        $this->type = $type;
+        $this->_targetName = $targetName;
+        $this->_tempName = $tempName;
+        $this->_type = $type;
     }
 
 
@@ -134,7 +134,7 @@ class Upload
      */
     public function getTargetName()
     {
-        return $this->targetName;
+        return $this->_targetName;
     }
 
 
@@ -146,7 +146,7 @@ class Upload
     public function setTargetName($targetName)
     {
         assert('is_string($targetName)');
-        $this->targetName = $targetName;
+        $this->_targetName = $targetName;
     }    
 
 
@@ -156,7 +156,7 @@ class Upload
      */
     public function getTempName()
     {
-        return $this->tempName;
+        return $this->_tempName;
     }
 
 
@@ -166,7 +166,7 @@ class Upload
      */
     public function getType()
     {
-        return $this->type;
+        return $this->_type;
     }
 
 

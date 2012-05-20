@@ -20,4 +20,6 @@ use itbz\httpio\Exception;
  * @package httpio
  * @subpackage Exceptions
  */
-class DataNotValidException extends Exception {}
+class DataNotValidException extends Exception
+{
+}

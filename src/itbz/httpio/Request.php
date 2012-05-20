@@ -47,9 +47,9 @@ class Request
 
     /**
      * List of valid HTTP methods
-     * @var array $VALID_METHODS
+     * @var array $_validMethods
      */
-    static private $VALID_METHODS = array(
+    static private $_validMethods = array(
         'HEAD', 'GET', 'POST', 'PUT', 'DELETE',
         'TRACE', 'OPTIONS', 'CONNECT', 'PATCH'
     );
@@ -57,37 +57,37 @@ class Request
 
     /**
      * Remote request ip address
-     * @var string $ip
+     * @var string $_ip
      */
-    private $ip;
+    private $_ip;
 
 
     /**
      * Request uri Filled in __construct().
-     * @var string $uri
+     * @var string $_uri
      */
-    private $uri;
+    private $_uri;
 
 
     /**
      * Request method. Filled in __construct().
-     * @var string $method
+     * @var string $_method
      */
-    private $method;
+    private $_method;
 
 
     /**
      * Request content type
-     * @var string $contentType
+     * @var string $_contentType
      */
-    private $contentType = 'text/plain';
+    private $_contentType = 'text/plain';
 
 
     /**
      * Request charset
-     * @var string $charset
+     * @var string $_charset
      */
-    private $charset = '';
+    private $_charset = '';
 
 
     /**
@@ -120,9 +120,9 @@ class Request
 
     /**
      * Uploaded files info
-     * @var array $files
+     * @var array $_files
      */
-    private $files;
+    private $_files;
 
 
     /**
@@ -146,16 +146,17 @@ class Request
         array $query,
         array $body,
         array $files
-    ) {
+    )
+    {
         assert('is_string($ip)');
         assert('is_string($uri)');
         assert('is_string($method)');
-        $this->ip = $ip;
-        $this->uri = $uri;
-        $this->method = $method;
+        $this->_ip = $ip;
+        $this->_uri = $uri;
+        $this->_method = $method;
         
         // Validate request method
-        if ( !in_array($method, self::$VALID_METHODS) ) {
+        if ( !in_array($method, self::$_validMethods) ) {
             throw new Exception("Unknown request method '$method'", 501);
         }
 
@@ -163,15 +164,18 @@ class Request
         $this->cookies = new Laundromat($cookies);
         $this->query = new Laundromat($query);
         $this->body = new Laundromat($body);
-        $this->files = $files;
+        $this->_files = $files;
 
         // Set content type and charset
         if ( $this->headers->is('Content-Type') ) {
             $ctype = new HeaderParam(
-                $this->headers->get('Content-Type', '/^[a-zA-Z\/+,;=.*() 0-9-]+$/')
+                $this->headers->get(
+                    'Content-Type',
+                    '/^[a-zA-Z\/+,;=.*() 0-9-]+$/'
+                )
             );
-            $this->contentType = $ctype->getBase();
-            $this->charset = $ctype->getParam('charset');
+            $this->_contentType = $ctype->getBase();
+            $this->_charset = $ctype->getParam('charset');
         }
     }
 
@@ -186,7 +190,7 @@ class Request
      */
     public function getIp()
     {
-        return $this->ip;
+        return $this->_ip;
     }
 
 
@@ -196,7 +200,7 @@ class Request
      */
     public function getUri()
     {
-        return $this->uri;
+        return $this->_uri;
     }
 
 
@@ -206,7 +210,7 @@ class Request
      */
     public function getMethod()
     {
-        return $this->method;
+        return $this->_method;
     }
 
 
@@ -216,7 +220,7 @@ class Request
      */
     public function getContentType()
     {
-        return $this->contentType;
+        return $this->_contentType;
     }
 
 
@@ -226,7 +230,7 @@ class Request
      */
     public function getCharset()
     {
-        return $this->charset;
+        return $this->_charset;
     }
 
 
@@ -236,7 +240,8 @@ class Request
      * @param string $checkHeader Header to check, 'If-Match' or 'If-None-Match'
      * @return bool TRUE if $etag matches, FALSE otherwise
      */
-    public function matchEtag($etag, $checkHeader = "If-Match"){
+    public function matchEtag($etag, $checkHeader = "If-Match")
+    {
         assert('is_string($etag)');
         assert('$checkHeader=="If-Match" || $checkHeader=="If-None-Match"');
 
@@ -252,20 +257,21 @@ class Request
     /**
      * Match client if-modified header
      * @param DateTime $time Current time if omitted
-     * @param string $checkHeader 'If-Modified-Since' or 'If-Unmodified-Since'
+     * @param string $header 'If-Modified-Since' or 'If-Unmodified-Since'
      * @return bool TRUE if time is earlier than header, FALSE otherwise
      */
     public function matchModified(
         DateTime $time = NULL,
-        $checkHeader = 'If-Modified-Since'
-    ) {
+        $header = 'If-Modified-Since'
+    )
+    {
         if ( !$time ) $time = new DateTime();
-        assert('$checkHeader=="If-Modified-Since" || $checkHeader=="If-Unmodified-Since"');
+        assert('$header=="If-Modified-Since"||$header=="If-Unmodified-Since"');
 
         $headerTime = -1;
-        if ( $this->headers->is($checkHeader) ) {
+        if ( $this->headers->is($header) ) {
             $headerTime = strtotime(
-                $this->headers->get($checkHeader, '/^[a-zA-Z0-9 ,:+-]*$/')
+                $this->headers->get($header, '/^[a-zA-Z0-9 ,:+-]*$/')
             );
         }
 
@@ -283,7 +289,7 @@ class Request
      */
     public function isUpload()
     {
-        return !empty($this->files);
+        return !empty($this->_files);
     }
 
 
@@ -297,13 +303,16 @@ class Request
         if ( !$this->isUpload() ) return NULL;
 
         // Get data and apply defualts
-        $data = array_merge(array(
-            'name' => '',
-            'type' => '',
-            'size' => 0,
-            'tmp_name' => '',
-            'error' => UPLOAD_ERR_OK,
-        ), (array)array_shift($this->files));
+        $data = array_merge(
+            array(
+                'name' => '',
+                'type' => '',
+                'size' => 0,
+                'tmp_name' => '',
+                'error' => UPLOAD_ERR_OK,
+            ),
+            (array)array_shift($this->_files)
+        );
 
         // Create Upload object
         return new Upload(

@@ -20,4 +20,6 @@ use itbz\httpio\Exception;
  * @package httpio
  * @subpackage Exceptions
  */
-class DataNotSetException extends Exception {}
+class DataNotSetException extends Exception
+{
+}

@@ -22,16 +22,16 @@ class HeaderParam
 
     /**
      * List of params
-     * @var array $params
+     * @var array $_params
      */
-    private $params = array();
+    private $_params = array();
 
     
     /**
      * Base header param
-     * @var string $base
+     * @var string $_base
      */
-    private $base;
+    private $_base;
 
 
     /**
@@ -42,21 +42,24 @@ class HeaderParam
     {
         assert('is_string($header)');
         $parts = explode(';', $header);
-        foreach ( $parts as $part ) {
+        foreach ($parts as $part) {
             $subparts = explode('=', $part, 2);
             
             // Trim all subparts
-            $subparts = array_map(function($value){
-                return trim($value, " \t\n\r\0\x0B'\"");
-            },$subparts);
+            $subparts = array_map(
+                function($value){
+                    return trim($value, " \t\n\r\0\x0B'\"");
+                },
+                $subparts
+            );
             
-            if ( count($subparts) > 1 ) {
+            if (count($subparts) > 1) {
                 // Save parameter
                 list($key, $value) = $subparts;
-                $this->params[$key] = $value;
+                $this->_params[$key] = $value;
             } else {
                 // Save base param
-                $this->base = $subparts[0];
+                $this->_base = $subparts[0];
             }
         }
     }
@@ -68,7 +71,7 @@ class HeaderParam
      */
     public function getBase()
     {
-        return $this->base;
+        return $this->_base;
     }
 
 
@@ -79,7 +82,7 @@ class HeaderParam
      */
     public function getParam($name)
     {
-        return isset($this->params[$name]) ? $this->params[$name] : '';
+        return isset($this->_params[$name]) ? $this->_params[$name] : '';
     }
 
 }

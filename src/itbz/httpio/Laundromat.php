@@ -29,9 +29,9 @@ class Laundromat
 
     /**
      * Internal data store
-     * @var array $data
+     * @var array $_data
      */
-    private $data;
+    private $_data;
 
 
     /**
@@ -45,7 +45,7 @@ class Laundromat
      */
     public function __construct(array $data)
     {
-        $this->data = array_change_key_case($data);
+        $this->_data = array_change_key_case($data);
     }
 
 
@@ -58,7 +58,7 @@ class Laundromat
     {
         assert('is_string($key)');
         $key = strtolower($key);
-        unset($this->data[$key]);
+        unset($this->_data[$key]);
     }
 
 
@@ -71,7 +71,7 @@ class Laundromat
     {
         assert('is_string($key)');
         $key = strtolower($key);
-        return isset($this->data[$key]);
+        return isset($this->_data[$key]);
     }
 
 
@@ -94,24 +94,26 @@ class Laundromat
         assert('is_string($key)');
         $key = strtolower($key);
 
-        if ( !$this->is($key) ) {
+        if (!$this->is($key)) {
             $msg = "Request data for key '$key' missing.";
             throw new DataNotSetException($msg, 400);
         }
 
-        $value = $this->data[$key];
+        $value = $this->_data[$key];
 
         // Use callback function
-        if ( is_callable($filter) ) {
-            if ( $filter($value) ) return $value;
+        if (is_callable($filter)) {
+            if ($filter($value)) {
+                return $value;
+            }
 
         // Use sanitising filter
-        } elseif ( is_long($filter) ) {
+        } elseif (is_long($filter)) {
             return filter_var($value, $filter);
 
         // Use regular expression
-        } elseif ( is_string($filter) && is_scalar($value) ) {
-            if ( preg_match($filter, $value) ) {
+        } elseif (is_string($filter) && is_scalar($value)) {
+            if (preg_match($filter, $value)) {
                 return $value;
             }
         }

@@ -16,22 +16,26 @@ namespace itbz\httpio;
 /**
  * Http Response obect
  * @package httpio
+ * @todo all data som ska skickas: alla headers, all vanlig data mm ska sparas
+ * i objektet. Sedan ska det skickas med en metod send(). På detta sätt kan
+ * varje controller generera sitt eget response, och jag kan enkelt kontrollera
+ * att det har blivit rätt i test...
  */
 class Response
 {
 
     /**
      * Http response status
-     * @var int $status
+     * @var int $_status
      */
-    private $status = 200;
+    private $_status = 200;
 
     
     /**
      * Wrapper to header manipulation functions
-     * @var HeaderTool $headerTool
+     * @var HeaderTool $_headerTool
      */
-    private $headerTool;
+    private $_headerTool;
 
 
     /**
@@ -40,7 +44,7 @@ class Response
      */
     public function __construct(HeaderTool $headerTool)
     {
-        $this->headerTool = $headerTool;
+        $this->_headerTool = $headerTool;
     }
 
 
@@ -52,9 +56,9 @@ class Response
     public function setStatus($status)
     {
         assert('is_int($status)');
-        $this->status = $status;
+        $this->_status = $status;
         $desc = self::getStatusDesc($status);
-        $this->headerTool->status($status, $desc);
+        $this->_headerTool->status($status, $desc);
     }
 
 
@@ -64,7 +68,7 @@ class Response
      */
     public function getStatus()
     {
-        return $this->status;
+        return $this->_status;
     }
 
 
@@ -78,7 +82,7 @@ class Response
     {
         assert('is_string($name)');
         assert('is_string($value)');
-        $this->headerTool->header($name, $value, TRUE);
+        $this->_headerTool->header($name, $value, TRUE);
     }
 
 
@@ -92,7 +96,7 @@ class Response
     {
         assert('is_string($name)');
         assert('is_string($value)');
-        $this->headerTool->header($name, $value, FALSE);
+        $this->_headerTool->header($name, $value, FALSE);
     }
 
 
@@ -104,7 +108,7 @@ class Response
     public function removeHeader($header)
     {
         assert('is_string($header)');
-        $this->headerTool->header_remove($header);
+        $this->_headerTool->header_remove($header);
     }
 
 
@@ -115,7 +119,7 @@ class Response
     public function getallheaders()
     {
         $headers = array();
-        foreach ( $this->headerTool->headers_list() as $header ) {
+        foreach ( $this->_headerTool->headers_list() as $header ) {
             list($key, $val) = preg_split("/:/", $header, 2);
             $key = trim($key);
             $val = trim($val);
@@ -223,7 +227,8 @@ class Response
         $fname,
         $ctype = 'application/x-download',
         $cdisp = 'attachment'
-    ) {
+    )
+    {
         assert('is_string($data)');
         assert('is_string($fname)');
         assert('is_string($ctype)');

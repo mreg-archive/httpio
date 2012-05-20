@@ -20,4 +20,6 @@ use itbz\httpio\Exception;
  * @package httpio
  * @subpackage Exceptions
  */
-class FileUploadException extends Exception {}
+class FileUploadException extends Exception
+{
+}
