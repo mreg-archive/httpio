@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -16,7 +17,9 @@ use DateTime;
 
 /**
  * Http Request object
+ *
  * @uses Laundromat
+ *
  * @package httpio
  *
  * @example
@@ -47,7 +50,8 @@ class Request
 
     /**
      * List of valid HTTP methods
-     * @var array $_validMethods
+     *
+     * @var array
      */
     static private $_validMethods = array(
         'HEAD', 'GET', 'POST', 'PUT', 'DELETE',
@@ -57,84 +61,103 @@ class Request
 
     /**
      * Remote request ip address
-     * @var string $_ip
+     *
+     * @var string
      */
     private $_ip;
 
 
     /**
      * Request uri Filled in __construct().
-     * @var string $_uri
+     *
+     * @var string
      */
     private $_uri;
 
 
     /**
      * Request method. Filled in __construct().
-     * @var string $_method
+     *
+     * @var string
      */
     private $_method;
 
 
     /**
      * Request content type
-     * @var string $_contentType
+     *
+     * @var string
      */
     private $_contentType = 'text/plain';
 
 
     /**
      * Request charset
-     * @var string $_charset
+     *
+     * @var string
      */
     private $_charset = '';
 
 
     /**
      * Request headers Laundromat object
-     * @var Laundromat $headers
+     *
+     * @var Laundromat
      */
     public $headers;
 
 
     /**
      * Request cookies Laundromat object
-     * @var Laundromat $cookies
+     *
+     * @var Laundromat
      */
     public $cookies;
 
 
     /**
      * Request query Laundromat object
-     * @var Laundromat $query
+     *
+     * @var Laundromat
      */
     public $query;
 
 
     /**
      * Request body Laundromat object
-     * @var Laundromat $body
+     *
+     * @var Laundromat
      */
     public $body;
 
 
     /**
      * Uploaded files info
-     * @var array $_files
+     *
+     * @var array
      */
     private $_files;
 
 
     /**
      * Set values at contruct
+     *
      * @param string $ip
+     *
      * @param string $uri
+     *
      * @param string $method
+     *
      * @param array $headers
+     *
      * @param array $cookies
+     *
      * @param array $query
+     *
      * @param array $body
+     *
      * @param array $files
+     *
      * @throws Exception If request method is uknown
      */
     public function __construct(
@@ -183,7 +206,7 @@ class Request
     /**
      * Get remote user ip address.
      *
-     * NOTE: Tecnically the ip address is not part of the http protocol. It is
+     * Tecnically the ip address is not part of the http protocol. It is
      * still saved for logging purposes.
      *
      * @return string
@@ -196,6 +219,7 @@ class Request
 
     /**
      * Get request uri
+     *
      * @return string
      */
     public function getUri()
@@ -206,6 +230,7 @@ class Request
 
     /**
      * Get request method
+     *
      * @return string
      */
     public function getMethod()
@@ -216,6 +241,7 @@ class Request
 
     /**
      * Get request content type
+     *
      * @return string
      */
     public function getContentType()
@@ -226,6 +252,7 @@ class Request
 
     /**
      * Get request charset
+     *
      * @return string
      */
     public function getCharset()
@@ -236,8 +263,11 @@ class Request
 
     /**
      * Match ETag against client If-Match header
+     *
      * @param string $etag
+     *
      * @param string $checkHeader Header to check, 'If-Match' or 'If-None-Match'
+     *
      * @return bool TRUE if $etag matches, FALSE otherwise
      */
     public function matchEtag($etag, $checkHeader = "If-Match")
@@ -256,8 +286,11 @@ class Request
 
     /**
      * Match client if-modified header
+     *
      * @param DateTime $time Current time if omitted
+     *
      * @param string $header 'If-Modified-Since' or 'If-Unmodified-Since'
+     *
      * @return bool TRUE if time is earlier than header, FALSE otherwise
      */
     public function matchModified(
@@ -285,6 +318,7 @@ class Request
 
     /**
      * Check if there are any uploads left unprocessed in request
+     *
      * @return bool
      */
     public function isUpload()
@@ -295,7 +329,9 @@ class Request
 
     /**
      * Get next upload
+     *
      * @return Upload NULL if no more uploadeds exist
+     *
      * @throws FileUploadException if there was an file upload error
      */
     public function getNextUpload()

@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -15,7 +16,9 @@ namespace itbz\httpio;
 
 /**
  * Internal class to handle calls to PHP native header functions
+ *
  * @package httpio
+ *
  * @codeCoverageIgnore
  */
 class HeaderTool
@@ -23,8 +26,11 @@ class HeaderTool
 
     /**
      * Set http status
+     *
      * @param int $status
+     *
      * @param string $desc
+     *
      * @return void
      */
     public function status($status, $desc)
@@ -39,9 +45,13 @@ class HeaderTool
 
     /**
      * Send a raw HTTP header
+     *
      * @param string $name
+     *
      * @param string $value
+     *
      * @param bool $replace
+     *
      * @return void
      */
     public function header($name, $value, $replace = TRUE)
@@ -52,7 +62,9 @@ class HeaderTool
 
     /**
      * Remove previously set header
+     *
      * @param string $name
+     *
      * @return void
      */
     public function header_remove($name)
@@ -63,6 +75,7 @@ class HeaderTool
 
     /**
      * Returns a numerically indexed array of headers
+     *
      * @return array
      */
     public function headers_list()

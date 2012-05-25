@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -15,6 +16,7 @@ namespace itbz\httpio;
 
 /**
  * Content negotiation class
+ *
  * @package httpio
  *
  * @example
@@ -42,20 +44,23 @@ class Negotiator
 
     /**
      * Array of supported values
-     * @var array $_supported
+     *
+     * @var array
      */
     private $_supported;
 
 
     /**
      * Complete result from the last negotiation
-     * @var array $_result
+     *
+     * @var array
      */
     private $_result = array();
 
 
     /**
      * Load supported values
+     *
      * @param array $supported Associative array with supported values as
      * keys and their respective q-values as values. Supported q-valuse are
      * ignored, but are kept to enable future enhancements.
@@ -68,7 +73,9 @@ class Negotiator
 
     /**
      * Negotiate from raw accept string
+     *
      * @param string $accept
+     *
      * @return string Negotiated value 
      */
     public function negotiate($accept)
@@ -81,6 +88,7 @@ class Negotiator
 
     /**
      * Get the complete result from the last negotiation
+     *
      * @return array
      */
     public function getResult()
@@ -98,6 +106,7 @@ class Negotiator
      *
      * @param array $accept Associative array with user acceptable values as
      * keys and their respective q-values as values.
+     *
      * @return string Negotiated value
      */
     public function negotiateArray(array $accept)
@@ -130,7 +139,9 @@ class Negotiator
 
     /**
      * Parses an accept string.
+     *
      * @param string $accept
+     *
      * @return array Returns an array with the accept types as keys, and
      * q-values as value (float).
      */
@@ -170,6 +181,7 @@ class Negotiator
      * language is preserved.
      *
      * @param array $values
+     *
      * @return array
      */
     static public function mergeRegion(array $values)

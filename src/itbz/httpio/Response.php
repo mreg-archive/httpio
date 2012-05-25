@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -15,7 +16,9 @@ namespace itbz\httpio;
 
 /**
  * Http Response obect
+ *
  * @package httpio
+ *
  * @todo all data som ska skickas: alla headers, all vanlig data mm ska sparas
  * i objektet. Sedan ska det skickas med en metod send(). På detta sätt kan
  * varje controller generera sitt eget response, och jag kan enkelt kontrollera
@@ -26,20 +29,23 @@ class Response
 
     /**
      * Http response status
-     * @var int $_status
+     *
+     * @var int
      */
     private $_status = 200;
 
     
     /**
      * Wrapper to header manipulation functions
-     * @var HeaderTool $_headerTool
+     *
+     * @var HeaderTool
      */
     private $_headerTool;
 
 
     /**
      * Set header wrap object
+     *
      * @param HeaderTool $headerTool
      */
     public function __construct(HeaderTool $headerTool)
@@ -50,7 +56,9 @@ class Response
 
     /**
      * Set http status code
+     *
      * @param int $status
+     *
      * @return void
      */
     public function setStatus($status)
@@ -63,7 +71,8 @@ class Response
 
 
     /**
-     * Get http status set using Response::setStatus()
+     * Get http status
+     *
      * @return int
      */
     public function getStatus()
@@ -74,8 +83,11 @@ class Response
 
     /**
      * Set header. Replace if header exists.
+     *
      * @param string $name
+     *
      * @param string $value
+     *
      * @return void
      */
     public function setHeader($name, $value)
@@ -88,8 +100,11 @@ class Response
 
     /**
      * Add header. Does not replace existing headers
+     *
      * @param string $name
+     *
      * @param string $value
+     *
      * @return void
      */
     public function addHeader($name, $value)
@@ -102,7 +117,9 @@ class Response
 
     /**
      * Remove previously set header.
+     *
      * @param string $header Header name, case-insensitive
+     *
      * @return void
      */
     public function removeHeader($header)
@@ -114,6 +131,7 @@ class Response
 
     /**
      * Get a associative array of all headers
+     *
      * @return array
      */
     public function getallheaders()
@@ -131,7 +149,9 @@ class Response
 
     /**
      * Return true if header is set
+     *
      * @param string $header
+     *
      * @return bool
      */
     public function isHeader($header)
@@ -145,7 +165,9 @@ class Response
 
     /**
      * Get the value of a specific header.
+     *
      * @param string $header Case insensitive.
+     *
      * @return string
      */
     public function getHeader($header)
@@ -159,6 +181,7 @@ class Response
 
     /**
      * Get response content type
+     *
      * @return string
      */
     public function getContentType()
@@ -170,6 +193,7 @@ class Response
 
     /**
      * Get response charset
+     *
      * @return string
      */
     public function getCharset()
@@ -181,6 +205,7 @@ class Response
 
     /**
      * Get response language
+     *
      * @return string
      */
     public function getLanguage()
@@ -191,7 +216,9 @@ class Response
 
     /**
      * Send a warning header with value 199
+     *
      * @param string $msg
+     *
      * @return void
      */
     public function setWarning($msg)
@@ -203,7 +230,9 @@ class Response
 
     /**
      * Send a warning header with value 299
+     *
      * @param string $msg
+     *
      * @return void
      */
     public function setPersistentWarning($msg)
@@ -215,11 +244,16 @@ class Response
 
     /**
      * Send a file to user.
+     *
      * @param string $data File contents
+     *
      * @param string $fname File name to send in Content-Disposition header
+     *
      * @param string $ctype Content type, defaults to application/x-download
+     *
      * @param string $cdisp Content disposition type. 'attachment' or 'inline',
      * defaults to 'attachment'
+     *
      * @return void
      */
     public function send_file(
@@ -241,7 +275,9 @@ class Response
 
     /**
      * Get text description of http status code
+     *
      * @param int $status
+     *
      * @return string
      */
     static public function getStatusDesc($status)

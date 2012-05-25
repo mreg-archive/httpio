@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -15,6 +16,7 @@ namespace itbz\httpio;
 
 /**
  * Helper class to read ; separated params from headers
+ *
  * @package httpio
  */
 class HeaderParam
@@ -22,20 +24,23 @@ class HeaderParam
 
     /**
      * List of params
-     * @var array $_params
+     *
+     * @var array
      */
     private $_params = array();
 
     
     /**
      * Base header param
-     * @var string $_base
+     *
+     * @var string
      */
     private $_base;
 
 
     /**
      * Set values from header
+     *
      * @param string $header
      */
     public function __construct($header)
@@ -67,6 +72,7 @@ class HeaderParam
     
     /**
      * Get header base param
+     *
      * @return string
      */
     public function getBase()
@@ -77,7 +83,9 @@ class HeaderParam
 
     /**
      * Get parameter from name
+     *
      * @param string $name
+     *
      * @return string
      */
     public function getParam($name)

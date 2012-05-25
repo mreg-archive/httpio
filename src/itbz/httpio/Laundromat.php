@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -18,7 +19,7 @@ use itbz\httpio\Exception\DataNotValidException;
 /**
  * Class for storing and validating unclean data.
  * 
- * NOTE: Laundromat stores data in a case insensitive manner. Data keys
+ * Laundromat stores data in a case insensitive manner. Data keys
  * differing only in case will be treated as identical and the former key-data
  * pair will be overwritten.
  *
@@ -29,7 +30,8 @@ class Laundromat
 
     /**
      * Internal data store
-     * @var array $_data
+     *
+     * @var array
      */
     private $_data;
 
@@ -37,7 +39,7 @@ class Laundromat
     /**
      * Set associative array with data.
      *
-     * NOTE: Laundromat stores data in a case insensitive manner. Data keys
+     * Laundromat stores data in a case insensitive manner. Data keys
      * differing only in case will be treated as identical and the former
      * key-data pair will be overwritten.
      *
@@ -51,7 +53,9 @@ class Laundromat
 
     /**
      * Remove data associated with $key
+     *
      * @param string $key
+     *
      * @return void
      */
     public function remove($key)
@@ -64,7 +68,9 @@ class Laundromat
 
     /**
      * Check if $key is set
+     *
      * @param string $key
+     *
      * @return bool
      */
     public function is($key)
@@ -84,9 +90,13 @@ class Laundromat
      * if it matches the expression. NOTE: delimiter must always be '/'
      *
      * @param string $key
+     *
      * @param mixed $filter
+     *
      * @return mixed The data associated with $key
+     *
      * @throws DataNotSetException if data is not set
+     *
      * @throws DataNotValidException if unvalid data is held back
      */
     public function get($key, $filter)

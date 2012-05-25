@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -16,7 +17,9 @@ use itbz\httpio\Exception\FileUploadException;
 
 /**
  * Upload objects are used when working with uploaded files
+ *
  * @package httpio
+ *
  * @example
  * $u = new Upload(
  *      $_FILES['foobar']['name'],
@@ -32,7 +35,8 @@ class Upload
 
     /**
      * List of PHP upload error codes and descriptive messages
-     * @var array $_uploadErrMsgs
+     *
+     * @var array
      */
     static private $_uploadErrMsgs = array(
         UPLOAD_ERR_INI_SIZE =>
@@ -54,32 +58,41 @@ class Upload
 
     /**
      * User specified target name of file
-     * @var string $_targetName
+     *
+     * @var string
      */
     private $_targetName;
 
 
     /**
      * Temporary file name
-     * @var string $_tempName
+     *
+     * @var string
      */
     private $_tempName;
 
 
     /**
      * MIME-type of uploaded file
-     * @var string $_type
+     *
+     * @var string
      */
     private $_type;
 
 
     /**
      * Set values
+     *
      * @param string $targetName
+     *
      * @param string $tempName
+     *
      * @param int $size
+     *
      * @param string $type
+     *
      * @param int $error
+     *
      * @throws FileUploadException If file is not a valid uploaded file
      */
     public function __construct($targetName, $tempName, $size, $type, $error)
@@ -130,6 +143,7 @@ class Upload
 
     /**
      * Get upload target name
+     *
      * @return string
      */
     public function getTargetName()
@@ -140,7 +154,9 @@ class Upload
 
     /**
      * Set new target name
+     *
      * @param string $targetName
+     *
      * @return void
      */
     public function setTargetName($targetName)
@@ -152,6 +168,7 @@ class Upload
 
     /**
      * Get upload temporary name
+     *
      * @return string
      */
     public function getTempName()
@@ -162,6 +179,7 @@ class Upload
 
     /**
      * Get upload MIME-type
+     *
      * @return string
      */
     public function getType()
@@ -172,8 +190,11 @@ class Upload
 
     /**
      * Move uploaded file to directory
+     *
      * @param string $dirname
+     *
      * @return bool TRUE on success, FALSE otherwise
+     *
      * @throws FileUploadException if directory is not writable
      */
     public function moveToDir($dirname)
@@ -194,7 +215,9 @@ class Upload
 
     /**
      * Read contents of uploaded file
+     *
      * @return string
+     *
      * @throws FileUploadException if unable to read contents
      */
     public function getContents()
@@ -208,7 +231,9 @@ class Upload
 
     /**
      * Wrapper to PHP native is_uploaded_file() function
+     *
      * @param string $fname
+     *
      * @return bool
      */
     protected function isUploadedFile($fname)
@@ -219,8 +244,11 @@ class Upload
 
     /**
      * Wrapper to PHP native move_uploaded_file() function
+     *
      * @param string $fname
+     *
      * @param string $destination
+     *
      * @return bool
      */
     protected function moveUploadedFile($fname, $destination)
@@ -231,7 +259,9 @@ class Upload
 
     /**
      * Wrapper to PHP natvie is_file() and is_readable() functions
+     *
      * @param string $fname
+     *
      * @return bool
      */
     protected function isReadableFile($fname)
@@ -242,7 +272,9 @@ class Upload
 
     /**
      * Wrapper to PHP native is_dir() and is_writable() functions
+     *
      * @param string $dirname
+     *
      * @return bool
      */
     protected function isWritableDir($dirname)
@@ -253,7 +285,9 @@ class Upload
 
     /**
      * Wrapper to PHP natvie filesize() function
+     *
      * @param string $fname
+     *
      * @return int
      */
     protected function filesize($fname)
@@ -264,7 +298,9 @@ class Upload
 
     /**
      * Wrapper to PHP natvie file_get_contents() function
+     *
      * @param string $fname
+     *
      * @return string The data read, FALSE on failure
      */
     protected function fileGetContents($fname)
