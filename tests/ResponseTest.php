@@ -1,30 +1,11 @@
 <?php
-/**
- * This file is part of the httpio package
- *
- * Copyright (c) 2012 Hannes Forsgård
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio
- * @subpackage Tests
- */
 namespace itbz\httpio;
-use PHPUnit_Framework_TestCase;
 
 
-// Include mock classes
 include_once "HeaderToolMock.php";
 
 
-/**
- * Test the Response class
- * @package httpio
- * @subpackage Tests
- */
-class ResponseTest extends PHPUnit_Framework_TestCase
+class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 
     function testSetGetStatus()
