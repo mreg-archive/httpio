@@ -18,14 +18,58 @@ namespace itbz\httpio;
  * Http Response obect
  *
  * @package httpio
- *
- * @todo all data som ska skickas: alla headers, all vanlig data mm ska sparas
- * i objektet. Sedan ska det skickas med en metod send(). På detta sätt kan
- * varje controller generera sitt eget response, och jag kan enkelt kontrollera
- * att det har blivit rätt i test...
  */
 class Response
 {
+
+    /**
+     * List of valid status codes and descriptions
+     *
+     * @var array
+     */
+    static private $_statusCodes = array(
+        100 => "Continue",
+        101 => "Switching Protocols",
+        200 => "OK",
+        201 => "Created",
+        202 => "Accepted",
+        203 => "Non-Authoritative Information",
+        204 => "No Content",
+        205 => "Reset Content",
+        206 => "Partial Content",
+        300 => "Multiple Choices",
+        301 => "Moved Permanently",
+        302 => "Found",
+        303 => "See Other",
+        304 => "Not Modified",
+        305 => "Use Proxy",
+        307 => "Temporary Redirect",
+        400 => "Bad Request",
+        401 => "Unauthorized",
+        402 => "Payment Required",
+        403 => "Forbidden",
+        404 => "Not Found",
+        405 => "Method Not Allowed",
+        406 => "Not Acceptable",
+        407 => "Proxy Authentication Required",
+        408 => "Request Timeout",
+        409 => "Conflict",
+        410 => "Gone",
+        411 => "Length Required",
+        412 => "Precondition Failed",
+        413 => "Request Entity Too Large",
+        414 => "Request-URI Too Long",
+        415 => "Unsupported Media Type",
+        416 => "Requested Range Not Satisfiable",
+        417 => "Expectation Failed",
+        500 => "Internal Server Error",
+        501 => "Not Implemented",
+        502 => "Bad Gateway",
+        503 => "Service Unavailable",
+        504 => "Gateway Timeout",
+        505 => "HTTP Version Not Supported",
+    );
+
 
     /**
      * Http response status
@@ -34,24 +78,21 @@ class Response
      */
     private $_status = 200;
 
-    
+
     /**
-     * Wrapper to header manipulation functions
+     * List of headers
      *
-     * @var HeaderTool
+     * @var array
      */
-    private $_headerTool;
+    private $_headers = array();
 
 
     /**
-     * Set header wrap object
+     * The response body
      *
-     * @param HeaderTool $headerTool
+     * @var string
      */
-    public function __construct(HeaderTool $headerTool)
-    {
-        $this->_headerTool = $headerTool;
-    }
+    private $_body = '';
 
 
     /**
@@ -65,13 +106,11 @@ class Response
     {
         assert('is_int($status)');
         $this->_status = $status;
-        $desc = self::getStatusDesc($status);
-        $this->_headerTool->status($status, $desc);
     }
 
 
     /**
-     * Get http status
+     * Get http status code
      *
      * @return int
      */
@@ -82,7 +121,58 @@ class Response
 
 
     /**
-     * Set header. Replace if header exists.
+     * Clear response body
+     *
+     * @return void
+     */
+    public function clearContent()
+    {
+        $this->_body = '';
+    }
+
+
+    /**
+     * Add content to response body
+     *
+     * @param string $content
+     *
+     * @return void
+     */
+    public function addContent($content)
+    {
+        $this->_body .= $content;
+    }
+
+
+    /**
+     * Replace response body with content
+     *
+     * @param string $content
+     *
+     * @return void
+     */
+    public function setContent($content)
+    {
+        $this->clearContent();
+        $this->addContent($content);
+    }
+
+
+    /**
+     * Get response body
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->_body;
+    }
+
+
+    /**
+     * Set header
+     *
+     * Existing headers with the same same will be overwritten
      *
      * @param string $name
      *
@@ -94,12 +184,15 @@ class Response
     {
         assert('is_string($name)');
         assert('is_string($value)');
-        $this->_headerTool->header($name, $value, TRUE);
+        $name = self::toCamelCase($name);
+        $this->_headers[$name] = array($value);
     }
 
 
     /**
-     * Add header. Does not replace existing headers
+     * Add header
+     *
+     * Existing headers with the same same will NOT be overwritten
      *
      * @param string $name
      *
@@ -111,117 +204,91 @@ class Response
     {
         assert('is_string($name)');
         assert('is_string($value)');
-        $this->_headerTool->header($name, $value, FALSE);
-    }
-
-
-    /**
-     * Remove previously set header.
-     *
-     * @param string $header Header name, case-insensitive
-     *
-     * @return void
-     */
-    public function removeHeader($header)
-    {
-        assert('is_string($header)');
-        $this->_headerTool->header_remove($header);
-    }
-
-
-    /**
-     * Get a associative array of all headers
-     *
-     * @return array
-     */
-    public function getallheaders()
-    {
-        $headers = array();
-        foreach ( $this->_headerTool->headers_list() as $header ) {
-            list($key, $val) = preg_split("/:/", $header, 2);
-            $key = trim($key);
-            $val = trim($val);
-            $headers[$key] = $val;
+        $name = self::toCamelCase($name);
+        if (isset($this->_headers[$name])) {
+            $this->_headers[$name][] = $value;
+        } else {
+            $this->_headers[$name] = array($value);
         }
-        return $headers;
+    }
+
+
+    /**
+     * Get the value of a specific header
+     *
+     * @param string $name Case-insensitive.
+     *
+     * @return string
+     */
+    public function getHeader($name)
+    {
+        assert('is_string($name)');
+        $name = self::toCamelCase($name);
+        $value = '';
+        if (isset($this->_headers[$name])) {
+            $value = implode(', ', $this->_headers[$name]);
+        }
+        
+        return $value;
     }
 
 
     /**
      * Return true if header is set
      *
-     * @param string $header
+     * @param string $name Name of header, case-insensitive
      *
      * @return bool
      */
-    public function isHeader($header)
+    public function isHeader($name)
     {
-        assert('is_string($header)');
-        $header = strtolower($header);
-        $headers = array_change_key_case($this->getallheaders());
-        return isset($headers[$header]);
+        assert('is_string($name)');
+        $name = self::toCamelCase($name);
+
+        return isset($this->_headers[$name]);
     }
 
 
     /**
-     * Get the value of a specific header.
+     * Remove header
      *
-     * @param string $header Case insensitive.
+     * @param string $name Name of header, case-insensitive
      *
-     * @return string
+     * @return void
      */
-    public function getHeader($header)
+    public function removeHeader($name)
     {
-        assert('is_string($header)');
-        $header = strtolower($header);
-        $headers = array_change_key_case($this->getallheaders());
-        return isset($headers[$header]) ? $headers[$header] : '';
+        $name = self::toCamelCase($name);
+        unset($this->_headers[$name]);
     }
 
 
     /**
-     * Get response content type
+     * Get array of headers set
      *
-     * @return string
+     * @return array
      */
-    public function getContentType()
+    public function getHeaders()
     {
-        $params = new HeaderParam($this->getHeader('Content-Type'));
-        return $params->getBase();
+        $headers = array();
+        foreach ($this->_headers as $name => $values) {
+            foreach ($values as $value) {
+                $headers[] = "$name: $value";
+            }
+        }
+        
+        return $headers;
     }
 
 
     /**
-     * Get response charset
-     *
-     * @return string
-     */
-    public function getCharset()
-    {
-        $params = new HeaderParam($this->getHeader('Content-Type'));
-        return $params->getParam('charset');
-    }
-
-
-    /**
-     * Get response language
-     *
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->getHeader('Content-Language');
-    }
-
-
-    /**
-     * Send a warning header with value 199
+     * Add a warning header
      *
      * @param string $msg
      *
      * @return void
      */
-    public function setWarning($msg)
+    public function addWarning($msg)
     {
         assert('is_string($msg)');
         $this->addHeader('Warning', "199 $msg");
@@ -229,13 +296,13 @@ class Response
 
 
     /**
-     * Send a warning header with value 299
+     * Add a persistent warning header
      *
      * @param string $msg
      *
      * @return void
      */
-    public function setPersistentWarning($msg)
+    public function addPersistentWarning($msg)
     {
         assert('is_string($msg)');
         $this->addHeader('Warning', "299 $msg");
@@ -256,7 +323,7 @@ class Response
      *
      * @return void
      */
-    public function send_file(
+    public function setFile(
         $data,
         $fname,
         $ctype = 'application/x-download',
@@ -269,63 +336,73 @@ class Response
         assert('$cdisp=="inline" || $cdisp=="attachment"');
         $this->setHeader("Content-Type", $ctype);
         $this->setHeader("Content-Disposition", "$cdisp; filename=$fname");
-        echo $data;
+        $this->setContent($data);
+    }
+
+
+    /**
+     * Send response
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore
+     */
+    public function send()
+    {
+        // Send status header
+        $desc = self::getStatusDesc($this->_status);
+        if (strpos(PHP_SAPI, 'fcgi') !== FALSE) {
+            header("Status: {$this->_status} $desc");
+        } else {
+            header("HTTP/1.1 {$this->_status} $desc");
+        }
+        
+        // Send headers
+        foreach ($this->getHeaders() as $header) {
+            header($header, FALSE);
+        }
+        
+        // Send content
+        echo $this->_body;
+    }
+
+
+    /**
+     * Convert string to camel case
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    public static function toCamelCase($str)
+    {
+        return implode(
+            '-',
+            array_map(
+                function($substr){
+                    return ucfirst(strtolower($substr));
+                },
+                explode('-', $str)
+            )
+        );
     }
 
 
     /**
      * Get text description of http status code
      *
-     * @param int $status
+     * @param int $code
      *
      * @return string
      */
-    static public function getStatusDesc($status)
+    public static function getStatusDesc($code)
     {
-        assert('is_int($status)');
-        switch ( $status ) {
-            case 100: return "Continue";
-            case 101: return "Switching Protocols";
-            case 200: return "OK";
-            case 201: return "Created";
-            case 202: return "Accepted";
-            case 203: return "Non-Authoritative Information";
-            case 204: return "No Content";
-            case 205: return "Reset Content";
-            case 206: return "Partial Content";
-            case 300: return "Multiple Choices";
-            case 301: return "Moved Permanently";
-            case 302: return "Found";
-            case 303: return "See Other";
-            case 304: return "Not Modified";
-            case 305: return "Use Proxy";
-            case 307: return "Temporary Redirect";
-            case 400: return "Bad Request";
-            case 401: return "Unauthorized";
-            case 402: return "Payment Required";
-            case 403: return "Forbidden";
-            case 404: return "Not Found";
-            case 405: return "Method Not Allowed";
-            case 406: return "Not Acceptable";
-            case 407: return "Proxy Authentication Required";
-            case 408: return "Request Timeout";
-            case 409: return "Conflict";
-            case 410: return "Gone";
-            case 411: return "Length Required";
-            case 412: return "Precondition Failed";
-            case 413: return "Request Entity Too Large";
-            case 414: return "Request-URI Too Long";
-            case 415: return "Unsupported Media Type";
-            case 416: return "Requested Range Not Satisfiable";
-            case 417: return "Expectation Failed";
-            case 500: return "Internal Server Error";
-            case 501: return "Not Implemented";
-            case 502: return "Bad Gateway";
-            case 503: return "Service Unavailable";
-            case 504: return "Gateway Timeout";
-            case 505: return "HTTP Version Not Supported";
-            default: return "";
+        $desc = '';
+        if (isset(self::$_statusCodes[$code])) {
+            $desc = self::$_statusCodes[$code];
         }
+
+        return $desc;
     }
 
 }

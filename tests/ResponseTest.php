@@ -2,119 +2,159 @@
 namespace itbz\httpio;
 
 
-include_once "HeaderToolMock.php";
-
-
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 
+    function testGetStatusDesc()
+    {
+        $this->assertEquals('Continue', Response::getStatusDesc(100));
+    }
+
+
+    function testToCamelCase()
+    {
+        $this->assertEquals('Foo', Response::toCamelCase('foo'));
+        $this->assertEquals('Content-Type', Response::toCamelCase('content-type'));
+        $this->assertEquals('Content-Type', Response::toCamelCase('CONTENT-type'));
+    }
+
+
     function testSetGetStatus()
     {
-        $r = new Response(new HeaderToolMock());
-        $this->assertSame(200, $r->getStatus());
-        $r->setStatus(404);
-        $this->assertSame(404, $r->getStatus());
+        $response = new Response();
+        $this->assertSame(200, $response->getStatus());
+
+        $response->setStatus(404);
+        $this->assertSame(404, $response->getStatus());
+    }
+
+
+    function testContent()
+    {
+        $response = new Response();
+        $this->assertSame('', $response->getContent());    
+
+        $response->addContent('yo');
+        $this->assertSame('yo', $response->getContent());    
+
+        $response->setContent('foobar');
+        $this->assertSame('foobar', $response->getContent());    
+
+        $response->clearContent('foobar');
+        $this->assertSame('', $response->getContent());    
     }
 
     
-    function testSetIsRemoveHeader()
+    function testSetGetHeader()
     {
-        $r = new Response(new HeaderToolMock());
-        $this->assertFalse($r->isHeader('Content-Type'));
+        $response = new Response();
+        $this->assertSame('', $response->getHeader('Foo'));
 
-        $r->setHeader('Content-Type', 'text/html');
-        $this->assertTrue($r->isHeader('Content-Type'));
+        $response->setHeader('Foo', 'bar');
+        $this->assertSame('bar', $response->getHeader('Foo'));
 
-        $r->removeHeader('Content-Type');
-        $this->assertFalse($r->isHeader('Content-Type'));
+        // Case-insensitive get
+        $this->assertSame('bar', $response->getHeader('FOO'));
     }
 
 
-    function testAddGetHeader()
+    function testAddHeader()
     {
-        $r = new Response(new HeaderToolMock());
-        $this->assertSame('', $r->getHeader('Foo'));
+        $response = new Response();
+        $response->addHeader('Foo', 'foo');
+        $response->addHeader('Foo', 'bar');
+        $this->assertSame('foo, bar', $response->getHeader('Foo'));
+    }
 
-        $r->addHeader('Foo', 'foo1');
-        $this->assertSame('foo1', $r->getHeader('Foo'));
+    
+    function testIsHeader()
+    {
+        $response = new Response();
+        $this->assertFalse($response->isHeader('Foo'));
 
-        $r->addHeader('Foo', 'foo2');
-        $this->assertSame('foo1, foo2', $r->getHeader('Foo'));
+        $response->setHeader('Foo', 'bar');
+        $this->assertTrue($response->isHeader('Foo'));
+
+        // Case-insesitive search
+        $this->assertTrue($response->isHeader('FOO'));
     }
 
 
-    function testGetallheaders()
+    function testRemoveHeader()
     {
-        $r = new Response(new HeaderToolMock());
-        $r->setHeader('Content-Type', 'text/html');
-        $r->setHeader('Content-Language', 'sv');
+        $response = new Response();
+
+        $response->setHeader('Foo', 'bar');
+        $this->assertTrue($response->isHeader('Foo'));
+
+        $response->removeHeader('Foo');
+        $this->assertFalse($response->isHeader('Foo'));
+
+        $response->setHeader('Foo', 'bar');
+        $this->assertTrue($response->isHeader('Foo'));
+
+        // Case-insensitive remove
+        $response->removeHeader('FOO');
+        $this->assertFalse($response->isHeader('Foo'));
+    }
+
+
+    function testGetHeaders()
+    {
+        $response = new Response();
+        $response->setHeader('Foo', 'bar');
+        $response->addHeader('Bar', 'foo');
+        $response->addHeader('Bar', 'bar');
         $expected = array(
-            'Content-Type' => 'text/html',
-            'Content-Language' => 'sv'
+            'Foo: bar',
+            'Bar: foo',
+            'Bar: bar',
         );
-        $this->assertEquals($expected, $r->getallheaders());
+        $this->assertEquals($expected, $response->getHeaders());
     }
 
 
-    function testSetWarnings()
-    {
-        $r = new Response(new HeaderToolMock());
-        $r->setWarning('Warning');
-        $this->assertEquals('199 Warning', $r->getHeader('Warning'));
 
-        $r->removeHeader('Warning');
-        $r->setPersistentWarning('Warning');
-        $this->assertEquals('299 Warning', $r->getHeader('Warning'));
+    function testAddWarning()
+    {
+        $response = new Response();
+        $response->addWarning('foo');    
+        $response->addWarning('bar');    
+
+        $expected = array(
+            'Warning: 199 foo',
+            'Warning: 199 bar'
+        );
+        $this->assertEquals($expected, $response->getHeaders());
     }
 
 
-    function testSend_file()
+    function testAddPersistentWarning()
     {
-        $r = new Response(new HeaderToolMock());
-        ob_start();
-        $r->send_file('abcdef', 'file.txt');
-        $data = ob_get_contents();
-        ob_clean();
-        $this->assertEquals('abcdef', $data);
-        $this->assertEquals('application/x-download', $r->getHeader('Content-Type'));
-        $this->assertEquals('attachment; filename=file.txt', $r->getHeader('Content-Disposition'));
+        $response = new Response();
+        $response->addPersistentWarning('foo');    
+        $response->addPersistentWarning('bar');    
+
+        $expected = array(
+            'Warning: 299 foo',
+            'Warning: 299 bar'
+        );
+        $this->assertEquals($expected, $response->getHeaders());
     }
 
 
-    function testGetContentType()
+    function testSetFile()
     {
-        $r = new Response(new HeaderToolMock());
-        $this->assertEquals('', $r->getContentType());
+        $response = new Response();
+        $response->setFile('contents', 'download.txt');
 
-        $r->setHeader('Content-Type', 'text/html; charset=utf8');
-        $this->assertEquals('text/html', $r->getContentType());
-    }
+        $this->assertSame('contents', $response->getContent());
 
-
-    function testGetCharset()
-    {
-        $r = new Response(new HeaderToolMock());
-        $this->assertEquals('', $r->getCharset());
-
-        $r->setHeader('Content-Type', 'text/html; charset=utf8');
-        $this->assertEquals('utf8', $r->getCharset());
-    }
-
-
-    function testGetLanguage()
-    {
-        $r = new Response(new HeaderToolMock());
-        $this->assertEquals('', $r->getLanguage());
-
-        $r->setHeader('Content-Language', 'sv');
-        $this->assertEquals('sv', $r->getLanguage());
-    }
-
-
-    function testGetStatusDesc()
-    {
-        $this->assertEquals("Internal Server Error", Response::getStatusDesc(500));
-        $this->assertEquals("", Response::getStatusDesc(800));
+        $expected = array(
+            'Content-Type: application/x-download',
+            'Content-Disposition: attachment; filename=download.txt'
+        );
+        $this->assertEquals($expected, $response->getHeaders());
     }
 
 }
