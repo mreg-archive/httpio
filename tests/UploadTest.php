@@ -51,7 +51,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Error code triggers exception
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testUploadError()
     {
@@ -61,7 +61,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Temporary file does not exist
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testFileReadableError()
     {
@@ -71,7 +71,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Temporary file exists, but is not of size 123
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testFileSizeError()
     {
@@ -81,7 +81,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Unvalid type triggers exception
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testTypeError()
     {
@@ -91,7 +91,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Temporary file exists, but is not uploaded
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testIsUploadedFileError()
     {
@@ -126,7 +126,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Target dir does not exist
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testMoveToDirError()
     {
@@ -137,7 +137,7 @@ class UploadTest extends PHPUnit_Framework_TestCase
 
     /**
      * Target dir exists but file is not an uploaded file
-     * @expectedException itbz\httpio\Exceptions\FileUploadException
+     * @expectedException itbz\httpio\Exception\FileUploadException
      */
     function testMoveToDirNotUploaded()
     {

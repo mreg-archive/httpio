@@ -43,7 +43,7 @@ class LaundromatTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @expectedException itbz\httpio\Exceptions\DataNotSetException
+     * @expectedException itbz\httpio\Exception\DataNotSetException
      */
     function testDataNotSetException()
     {
@@ -53,7 +53,7 @@ class LaundromatTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @expectedException itbz\httpio\Exceptions\DataNotValidException
+     * @expectedException itbz\httpio\Exception\DataNotValidException
      */
     function testDataNotValidException()
     {

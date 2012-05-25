@@ -11,8 +11,8 @@
  * @package httpio
  */
 namespace itbz\httpio;
-use itbz\httpio\Exceptions\DataNotSetException;
-use itbz\httpio\Exceptions\DataNotValidException;
+use itbz\httpio\Exception\DataNotSetException;
+use itbz\httpio\Exception\DataNotValidException;
 
 
 /**

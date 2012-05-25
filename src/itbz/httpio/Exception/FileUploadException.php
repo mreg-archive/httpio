@@ -8,18 +8,21 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
- * @subpackage Exceptions
+ *
+ * @subpackage Exception
  */
-namespace itbz\httpio\Exceptions;
-use itbz\httpio\Exception;
+namespace itbz\httpio\Exception;
 
 
 /**
- * Exception for handling missing request data
+ * Exception for handling file upload exception
+ *
  * @package httpio
- * @subpackage Exceptions
+ *
+ * @subpackage Exception
  */
-class DataNotSetException extends Exception
+class FileUploadException extends \itbz\httpio\Exception
 {
 }

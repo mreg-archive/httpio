@@ -11,7 +11,7 @@
  * @package httpio
  */
 namespace itbz\httpio;
-use itbz\httpio\Exceptions\FileUploadException;
+use itbz\httpio\Exception\FileUploadException;
 
 
 /**

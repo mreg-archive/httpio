@@ -8,6 +8,7 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ *
  * @package httpio
  */
 namespace itbz\httpio;
@@ -15,6 +16,7 @@ namespace itbz\httpio;
 
 /**
  * Base exception
+ *
  * @package httpio
  */
 class Exception extends \Exception

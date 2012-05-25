@@ -14,7 +14,7 @@
 namespace itbz\httpio;
 use PHPUnit_Framework_TestCase;
 use DateTime;
-use itbz\httpio\Exceptions\FileUploadException;
+use itbz\httpio\Exception\FileUploadException;
 
 
 /**
