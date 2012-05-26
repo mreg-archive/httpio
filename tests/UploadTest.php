@@ -2,17 +2,12 @@
 namespace itbz\httpio;
 
 
-include_once "UploadMock.php";
-
-
 class UploadTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     * Create temporary dir and file for testing
-     */
-    protected function setUp()
+    function setUp()
     {
+        // Create temporary dir and file for testing
         $this->temporaryFileName = tempnam(sys_get_temp_dir(), 'UploadTest');
         $this->temporaryDir = tempnam(sys_get_temp_dir(), 'UploadTest');
         unlink($this->temporaryDir);
@@ -20,11 +15,9 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    /**
-     * Remove temporary dir and file
-     */
-    protected function tearDown()
+    function tearDown()
     {
+        // Remove temporary dir and file
         unlink($this->temporaryFileName);
         rmdir($this->temporaryDir);
     }
@@ -129,8 +122,8 @@ class UploadTest extends \PHPUnit_Framework_TestCase
 
     function testMoveToDir()
     {
-        $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
-        $u->forceMockLogic = TRUE;
+        $u = new UploadCopyFile('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
+        //$u->forceMockLogic = TRUE;
 
         $u->moveToDir($this->temporaryDir);
 
@@ -147,4 +140,20 @@ class UploadTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $data);
     }
 
+}
+
+class UploadMock extends Upload
+{
+    protected function isUploadedFile($fname)
+    {
+        return TRUE;
+    }
+}
+
+class UploadCopyFile extends UploadMock
+{
+    protected function moveUploadedFile($fname, $destination)
+    {
+        return copy($fname, $destination);
+    }
 }
