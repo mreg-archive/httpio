@@ -5,6 +5,8 @@ Lightweight library to encapsulate PHPs different HTTP interfaces (`$_GET`,
 `$_POST`, `header()` ...) in an object-oriented layer. Supportes input
 validation, content negotiation and file uploads.
 
+For detailed info se [the complete documentation](http://itbz.github.com/namespaces/itbz.httpio.html)
+
 
 ## Creating the request object
 
@@ -16,7 +18,7 @@ validation, content negotiation and file uploads.
 The request object contains the following public properties: `headers`,
 `cookies`, `query`, `body`. Each property is a `Laundromat` instance.
 
-Reading from a laundromat always includes validation the data. This can be done
+Reading from a laundromat always includes validating the data. This can be done
 by using a `filter_var` filter.
 
     $acceptHeader = $request->headers->get('accept', FILTER_SANITIZE_STRING);
