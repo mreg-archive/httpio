@@ -15,7 +15,10 @@ namespace itbz\httpio;
 
 
 /**
- * Http Response obect
+ * Lightweight HTTP Response obect
+ *
+ * Encapsulates HTTP headers and script output in a HTTP context. Very useful
+ * for unit testing.
  *
  * @package httpio
  */
@@ -72,11 +75,27 @@ class Response
 
 
     /**
-     * Http response status
+     * The response body
+     *
+     * @var string
+     */
+    private $_body;
+
+
+    /**
+     * Http response status code
      *
      * @var int
      */
-    private $_status = 200;
+    private $_statusCode;
+
+
+    /**
+     * Http response status description
+     *
+     * @var string
+     */
+    private $_statusText;
 
 
     /**
@@ -88,24 +107,46 @@ class Response
 
 
     /**
-     * The response body
+     * Construct response from input
      *
-     * @var string
+     * @param string $content
+     *
+     * @param int $status
+     *
+     * @param array $headers Associative array of headers
      */
-    private $_body = '';
+    public function __construct(
+        $content = '',
+        $status = 200,
+        array $headers = array()
+    )
+    {
+        $this->setContent($content);
+        $this->setStatus($status);
+        foreach ($headers as $name => $value) {
+            $this->setHeader((string)$name, $value);
+        }
+    }
 
 
     /**
      * Set http status code
      *
-     * @param int $status
+     * @param int $code
+     *
+     * @param string $description
      *
      * @return void
+     *
+     * @api
      */
-    public function setStatus($status)
+    public function setStatus($code, $description = '')
     {
-        assert('is_int($status)');
-        $this->_status = $status;
+        if (!$description) {
+            $description = self::getStatusDesc($code);
+        }
+        $this->_statusCode = (int)$code;
+        $this->_statusText = $description;
     }
 
 
@@ -116,7 +157,40 @@ class Response
      */
     public function getStatus()
     {
-        return $this->_status;
+        return $this->_statusCode;
+    }
+
+
+    /**
+     * Get the raw status header to send for this SAPI
+     *
+     * @return string
+     */
+    public function getStatusHeader()
+    {
+        if (strpos(PHP_SAPI, 'fcgi') !== FALSE) {
+            $format = "Status: %s %s";
+        } else {
+            $format = "HTTP/1.1 %s %s";
+        }
+        
+        return sprintf($format, $this->_statusCode, $this->_statusText);
+    }
+
+
+    /**
+     * Replace response body with content
+     *
+     * @param string $content
+     *
+     * @return void
+     *
+     * @api
+     */
+    public function setContent($content)
+    {
+        $this->clearContent();
+        $this->addContent($content);
     }
 
 
@@ -145,20 +219,6 @@ class Response
 
 
     /**
-     * Replace response body with content
-     *
-     * @param string $content
-     *
-     * @return void
-     */
-    public function setContent($content)
-    {
-        $this->clearContent();
-        $this->addContent($content);
-    }
-
-
-    /**
      * Get response body
      *
      * @return string
@@ -179,6 +239,8 @@ class Response
      * @param string $value
      *
      * @return void
+     *
+     * @api
      */
     public function setHeader($name, $value)
     {
@@ -199,6 +261,8 @@ class Response
      * @param string $value
      *
      * @return void
+     *
+     * @api
      */
     public function addHeader($name, $value)
     {
@@ -345,17 +409,12 @@ class Response
      *
      * @return void
      *
-     * @codeCoverageIgnore
+     * @api
      */
     public function send()
     {
         // Send status header
-        $desc = self::getStatusDesc($this->_status);
-        if (strpos(PHP_SAPI, 'fcgi') !== FALSE) {
-            header("Status: {$this->_status} $desc");
-        } else {
-            header("HTTP/1.1 {$this->_status} $desc");
-        }
+        header($this->getStatusHeader());
         
         // Send headers
         foreach ($this->getHeaders() as $header) {

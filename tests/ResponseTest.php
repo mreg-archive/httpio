@@ -29,6 +29,18 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    function testGetStatusHeader()
+    {
+        $response = new Response();
+
+        if (strpos(PHP_SAPI, 'fcgi') !== FALSE) {
+            $this->assertEquals('Status: 200 OK', $response->getStatusHeader());
+        } else {
+            $this->assertEquals('HTTP/1.1 200 OK', $response->getStatusHeader());
+        }
+    }
+
+
     function testContent()
     {
         $response = new Response();
@@ -55,6 +67,10 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
         // Case-insensitive get
         $this->assertSame('bar', $response->getHeader('FOO'));
+
+        // Set should overwrite
+        $response->setHeader('Foo', 'foobar');
+        $this->assertSame('foobar', $response->getHeader('Foo'));
     }
 
 
@@ -155,6 +171,29 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             'Content-Disposition: attachment; filename=download.txt'
         );
         $this->assertEquals($expected, $response->getHeaders());
+    }
+
+
+    function testConstructor()
+    {
+        $response = new Response('content', '201', array('Foo' => 'bar'));
+        $this->assertSame('content', $response->getContent());
+        $this->assertSame(201, $response->getStatus());
+
+        $expected = array(
+            'Foo: bar'
+        );
+        $this->assertEquals($expected, $response->getHeaders());
+    }
+
+    
+    function testSend()
+    {
+        ob_start();
+        $response = new Response('content', 200, array('Foo' => 'bar'));
+        $response->send();
+        $this->assertEquals('content', ob_get_contents());        
+        ob_end_clean();
     }
 
 }
