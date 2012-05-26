@@ -16,7 +16,7 @@ use itbz\httpio\Exception\FileUploadException;
 
 
 /**
- * Upload objects are used when working with uploaded files
+ * File upload object
  *
  * @package httpio
  */

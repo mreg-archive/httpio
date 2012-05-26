@@ -16,7 +16,7 @@ use DateTime;
 
 
 /**
- * Http Request object
+ * Lightweight HTTP Request object
  *
  * @uses Laundromat
  *
@@ -114,6 +114,61 @@ class Request
      * @var array
      */
     private $_files;
+
+
+    /**
+     * Create Request object from global variables
+     *
+     * @return Request
+     */
+    public static function createFromGlobals()
+    {
+        // Get values
+        $get = $_GET;
+        $post = $_POST;
+        $cookie = $_COOKIE;
+        $request = $_REQUEST;
+        $files = $_FILES;
+        $ip = '';
+        $method = 'GET';
+        $uri = '';
+
+        // Deflect magic qoutes
+        // @codeCoverageIgnoreStart
+        if ( get_magic_quotes_gpc() ) {
+            $get = array_map('stripslashes', $get);
+            $post = array_map('stripslashes', $post);
+            $cookie = array_map('stripslashes', $cookie);
+            $request = array_map('stripslashes', $request);
+        }
+        // @codeCoverageIgnoreEnd
+
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            $method = $_SERVER['REQUEST_METHOD'];
+        }
+        
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $uri = $_SERVER['REQUEST_URI'];
+        }
+
+        // Remove query string from uri
+        $uri = parse_url($uri, PHP_URL_PATH);
+
+        return new self(
+            $ip,
+            $uri,
+            $method,
+            getallheaders(),
+            $cookie,
+            $get,
+            $post,
+            $files
+        );
+    }
 
 
     /**
@@ -337,4 +392,27 @@ class Request
         );
     }
 
+}
+
+
+if (!function_exists('getallheaders')) {
+
+    /**
+     * Fallback if getallheaders does not exist
+     *
+     * @return array Associative array of request headers
+     */
+    function getallheaders()
+    {
+        $headers = array();
+        foreach ( $_SERVER as $key => $val ) {
+            if ( strpos($key, 'HTTP_') === 0 ) {
+                $key = str_replace('HTTP_', '', $key);
+                $key = str_replace('_', '-', $key);
+                $headers[$key] = $val;
+            }
+        }
+        
+        return $headers;
+    }
 }

@@ -110,4 +110,26 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         
     }
 
+
+    function testCreateFromGlobals()
+    {
+        $_SERVER = array(
+            'REQUEST_URI' => 'http://localhost/index.php?foo=bar',
+            'REMOTE_ADDR' => '192.168.0.1',
+            'REQUEST_METHOD' => 'GET',
+            'HTTP_USER_AGENT' => 'phpunit'
+        );
+        $_GET = array();
+        $_POST = array();
+        $_COOKIE = array();
+        $_FILES = array();
+
+        $r = Request::createFromGlobals();
+
+        $this->assertEquals('GET', $r->getMethod());
+        $this->assertEquals('192.168.0.1', $r->getIp());
+        $this->assertEquals('/index.php', $r->getUri());
+        $this->assertEquals('phpunit', $r->headers->get('user-agent', FILTER_SANITIZE_STRING));
+    }
+
 }
