@@ -21,29 +21,6 @@ use DateTime;
  * @uses Laundromat
  *
  * @package httpio
- *
- * @example
- * // Create Request object from normal PHP sources
- * new Request(
- *      $_SERVER['REMOTE_ADDR'],
- *      $_SERVER['REQUEST_URI'],
- *      $_SERVER['REQUEST_METHOD'],
- *      getallheaders(),
- *      $_COOKIE,
- *      $_GET,
- *      $_POST,
- *      $_FILES
- * );
- *
- * @example
- * // Negotiate content type
- * $n = new Negotiator(array(
- *      'text/html'=>1.0,
- *      'application/xhtml+xml'=>1.0
- * ));
- * $ctype = $n->negotiate(
- *      $request->headers->get('Accept', '/^[a-zA-Z\/+,;=.*() 0-9-]+$/')
- * );
  */
 class Request
 {

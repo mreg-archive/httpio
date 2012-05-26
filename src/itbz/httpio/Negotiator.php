@@ -18,26 +18,6 @@ namespace itbz\httpio;
  * Content negotiation class
  *
  * @package httpio
- *
- * @example
- * // Simple usage
- * $n = new Negotiator(array(
- *      'text/html'=>1.0,
- *      'application/xhtml+xml'=>1.0
- * ));
- * echo $n->negotiate("application/xml,application/xhtml+xml,text/html;q=0.9");
- * // Yields 'application/xml'
- *
- * @example
- * // Negotiate language discarding regional information
- * $n = new Negotiator(array(
- *      'sv'=>1.0,
- *      'en'=>1.0
- * ));
- * $arr = Negotiator::parseRawAccept("en-US,en;q=0.9,sv;q=0.9");
- * $arr = Negotiator::mergeRegion($arr);
- * echo $n->negotiateArray($arr)
- * // Yields 'en'
  */
 class Negotiator
 {

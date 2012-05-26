@@ -19,16 +19,6 @@ use itbz\httpio\Exception\FileUploadException;
  * Upload objects are used when working with uploaded files
  *
  * @package httpio
- *
- * @example
- * $u = new Upload(
- *      $_FILES['foobar']['name'],
- *      $_FILES['foobar']['tmp_name'],
- *      $_FILES['foobar']['size'],
- *      $_FILES['foobar']['type'],
- *      $_FILES['foobar']['error'],
- * );
- * $u->moveToDir('dirname');
  */
 class Upload
 {

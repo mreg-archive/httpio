@@ -123,7 +123,6 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     function testMoveToDir()
     {
         $u = new UploadCopyFile('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
-        //$u->forceMockLogic = TRUE;
 
         $u->moveToDir($this->temporaryDir);
 
