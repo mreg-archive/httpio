@@ -193,14 +193,14 @@ class Request
      * @throws Exception If request method is uknown
      */
     public function __construct(
-        $ip,
-        $uri,
-        $method,
-        array $headers,
-        array $cookies,
-        array $query,
-        array $body,
-        array $files
+        $ip = '',
+        $uri = '',
+        $method = 'GET',
+        array $headers = array(),
+        array $cookies = array(),
+        array $query = array(),
+        array $body = array(),
+        array $files = array()
     )
     {
         assert('is_string($ip)');
