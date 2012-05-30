@@ -272,6 +272,22 @@ class Request
 
 
     /**
+     * Check if request method equals $method
+     *
+     * @param string $method
+     *
+     * @return bool
+     */
+    public function isMethod($method)
+    {
+        assert('is_string($method)');
+        $method = strtoupper($method);
+        
+        return $this->_method == $method;
+    }
+
+
+    /**
      * Get request content type
      *
      * @return string

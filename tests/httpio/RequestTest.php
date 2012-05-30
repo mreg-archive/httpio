@@ -132,4 +132,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('phpunit', $r->headers->get('user-agent', FILTER_SANITIZE_STRING));
     }
 
+
+    function testIsMethod()
+    {
+        $request = new Request();
+        $this->assertTrue($request->isMethod('get'));
+    }
+
 }
