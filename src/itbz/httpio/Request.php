@@ -133,16 +133,6 @@ class Request
         $method = 'GET';
         $uri = '';
 
-        // Deflect magic qoutes
-        // @codeCoverageIgnoreStart
-        if ( get_magic_quotes_gpc() ) {
-            $get = array_map('stripslashes', $get);
-            $post = array_map('stripslashes', $post);
-            $cookie = array_map('stripslashes', $cookie);
-            $request = array_map('stripslashes', $request);
-        }
-        // @codeCoverageIgnoreEnd
-
         if (isset($_SERVER['REMOTE_ADDR'])) {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
@@ -155,8 +145,22 @@ class Request
             $uri = $_SERVER['REQUEST_URI'];
         }
 
+        if ($method == "PUT" && empty($post)) {
+            parse_str(file_get_contents("php://input"), $post);
+        }
+
         // Remove query string from uri
         $uri = parse_url($uri, PHP_URL_PATH);
+
+        // Deflect magic qoutes
+        // @codeCoverageIgnoreStart
+        if ( get_magic_quotes_gpc() ) {
+            $get = array_map('stripslashes', $get);
+            $post = array_map('stripslashes', $post);
+            $cookie = array_map('stripslashes', $cookie);
+            $request = array_map('stripslashes', $request);
+        }
+        // @codeCoverageIgnoreEnd
 
         return new self(
             $ip,
