@@ -1,12 +1,11 @@
 <?php
 namespace itbz\httpio;
+
 use DateTime;
 use itbz\httpio\Exception\FileUploadException;
 
-
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-
     private function getRequest()
     {
         return new Request(
@@ -34,13 +33,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     /**
      * @expectedException itbz\httpio\Exception
      */
-    function testMethodUnknownError()
+    public function testMethodUnknownError()
     {
-        $r = new Request(
+        new Request(
             '192.168.0.1',
             '/index.php',
             'FOO',
@@ -52,8 +50,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
-    function testGetIpUriMethodContentTypeCharset()
+    public function testGetIpUriMethodContentTypeCharset()
     {
         $r = $this->getRequest();
         $this->assertEquals('192.168.0.1', $r->getIp());
@@ -63,55 +60,49 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('utf8', $r->getCharset());
     }
 
-
-    function testMatchEtag()
+    public function testMatchEtag()
     {
         $r = $this->getRequest();
         $this->assertTrue($r->matchEtag('123456789'));
         $this->assertFalse($r->matchEtag('kjfhskdfjg'));
     }
 
-
-    function testMatchModified()
+    public function testMatchModified()
     {
         $r = $this->getRequest();
         $this->assertFalse($r->matchModified());
         $this->assertTrue($r->matchModified(new DateTime('1980')));
     }
 
-
-    function testIsUpload()
+    public function testIsUpload()
     {
         $r = $this->getRequest();
         $this->assertTrue($r->isUpload());
     }
 
-
-    function testGetNextUpload()
+    public function testGetNextUpload()
     {
         $r = $this->getRequest();
-        
+
         // Test get the one upload registerd in test request
-        $exception = FALSE;
+        $exception = false;
         try {
             $r->getNextUpload();
-        } catch ( FileUploadException $e ) {
+        } catch (FileUploadException $e) {
             // Exception because upload does not actually exist
-            $exception = TRUE;
+            $exception = true;
         }
         $this->assertTrue($exception);
-        
+
         // Test that while loop breaks when there are no more uploads
-        $didWhile = FALSE;
-        while ( $upload = $r->getNextUpload() ) {
-            $didWhile = TRUE;
+        $didWhile = false;
+        while ($r->getNextUpload()) {
+            $didWhile = true;
         }
         $this->assertFalse($didWhile);
-        
     }
 
-
-    function testCreateFromGlobals()
+    public function testCreateFromGlobals()
     {
         $_SERVER = array(
             'REQUEST_URI' => 'http://localhost/index.php?foo=bar',
@@ -132,11 +123,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('phpunit', $r->headers->get('user-agent', FILTER_SANITIZE_STRING));
     }
 
-
-    function testIsMethod()
+    public function testIsMethod()
     {
         $request = new Request();
         $this->assertTrue($request->isMethod('get'));
     }
-
 }

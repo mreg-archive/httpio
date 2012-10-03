@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
  * @package httpio
  */
-namespace itbz\httpio;
-use DateTime;
 
+namespace itbz\httpio;
+
+use DateTime;
 
 /**
  * Lightweight HTTP Request object
@@ -24,57 +24,50 @@ use DateTime;
  */
 class Request
 {
-
     /**
      * List of valid HTTP methods
      *
      * @var array
      */
-    static private $_validMethods = array(
+    private static $validMethods = array(
         'HEAD', 'GET', 'POST', 'PUT', 'DELETE',
         'TRACE', 'OPTIONS', 'CONNECT', 'PATCH'
     );
-
 
     /**
      * Remote request ip address
      *
      * @var string
      */
-    private $_ip;
-
+    private $ip;
 
     /**
      * Request uri Filled in __construct().
      *
      * @var string
      */
-    private $_uri;
-
+    private $uri;
 
     /**
      * Request method. Filled in __construct().
      *
      * @var string
      */
-    private $_method;
-
+    private $method;
 
     /**
      * Request content type
      *
      * @var string
      */
-    private $_contentType = 'text/plain';
-
+    private $contentType = 'text/plain';
 
     /**
      * Request charset
      *
      * @var string
      */
-    private $_charset = '';
-
+    private $charset = '';
 
     /**
      * Request headers Laundromat object
@@ -83,14 +76,12 @@ class Request
      */
     public $headers;
 
-
     /**
      * Request cookies Laundromat object
      *
      * @var Laundromat
      */
     public $cookies;
-
 
     /**
      * Request query Laundromat object
@@ -99,7 +90,6 @@ class Request
      */
     public $query;
 
-
     /**
      * Request body Laundromat object
      *
@@ -107,14 +97,12 @@ class Request
      */
     public $body;
 
-
     /**
      * Uploaded files info
      *
      * @var array
      */
-    private $_files;
-
+    private $files;
 
     /**
      * Create Request object from global variables
@@ -140,7 +128,7 @@ class Request
         if (isset($_SERVER['REQUEST_METHOD'])) {
             $method = $_SERVER['REQUEST_METHOD'];
         }
-        
+
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = $_SERVER['REQUEST_URI'];
         }
@@ -154,7 +142,7 @@ class Request
 
         // Deflect magic qoutes
         // @codeCoverageIgnoreStart
-        if ( get_magic_quotes_gpc() ) {
+        if (get_magic_quotes_gpc()) {
             $get = array_map('stripslashes', $get);
             $post = array_map('stripslashes', $post);
             $cookie = array_map('stripslashes', $cookie);
@@ -174,24 +162,16 @@ class Request
         );
     }
 
-
     /**
      * Set values at contruct
      *
      * @param string $ip
-     *
      * @param string $uri
-     *
      * @param string $method
-     *
      * @param array $headers
-     *
      * @param array $cookies
-     *
      * @param array $query
-     *
      * @param array $body
-     *
      * @param array $files
      *
      * @throws Exception If request method is uknown
@@ -205,17 +185,16 @@ class Request
         array $query = array(),
         array $body = array(),
         array $files = array()
-    )
-    {
+    ) {
         assert('is_string($ip)');
         assert('is_string($uri)');
         assert('is_string($method)');
-        $this->_ip = $ip;
-        $this->_uri = $uri;
-        $this->_method = $method;
-        
+        $this->ip = $ip;
+        $this->uri = $uri;
+        $this->method = $method;
+
         // Validate request method
-        if ( !in_array($method, self::$_validMethods) ) {
+        if (!in_array($method, self::$validMethods)) {
             throw new Exception("Unknown request method '$method'", 501);
         }
 
@@ -223,21 +202,20 @@ class Request
         $this->cookies = new Laundromat($cookies);
         $this->query = new Laundromat($query);
         $this->body = new Laundromat($body);
-        $this->_files = $files;
+        $this->files = $files;
 
         // Set content type and charset
-        if ( $this->headers->is('Content-Type') ) {
+        if ($this->headers->is('Content-Type')) {
             $ctype = new HeaderParam(
                 $this->headers->get(
                     'Content-Type',
                     '/^[a-zA-Z\/+,;=.*() 0-9-]+$/'
                 )
             );
-            $this->_contentType = $ctype->getBase();
-            $this->_charset = $ctype->getParam('charset');
+            $this->contentType = $ctype->getBase();
+            $this->charset = $ctype->getParam('charset');
         }
     }
-
 
     /**
      * Get remote user ip address.
@@ -249,9 +227,8 @@ class Request
      */
     public function getIp()
     {
-        return $this->_ip;
+        return $this->ip;
     }
-
 
     /**
      * Get request uri
@@ -260,9 +237,8 @@ class Request
      */
     public function getUri()
     {
-        return $this->_uri;
+        return $this->uri;
     }
-
 
     /**
      * Get request method
@@ -271,9 +247,8 @@ class Request
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
-
 
     /**
      * Check if request method equals $method
@@ -286,10 +261,9 @@ class Request
     {
         assert('is_string($method)');
         $method = strtoupper($method);
-        
-        return $this->_method == $method;
-    }
 
+        return $this->method == $method;
+    }
 
     /**
      * Get request content type
@@ -298,9 +272,8 @@ class Request
      */
     public function getContentType()
     {
-        return $this->_contentType;
+        return $this->contentType;
     }
-
 
     /**
      * Get request charset
@@ -309,15 +282,13 @@ class Request
      */
     public function getCharset()
     {
-        return $this->_charset;
+        return $this->charset;
     }
-
 
     /**
      * Match ETag against client If-Match header
      *
      * @param string $etag
-     *
      * @param string $checkHeader Header to check, 'If-Match' or 'If-None-Match'
      *
      * @return bool TRUE if $etag matches, FALSE otherwise
@@ -331,42 +302,41 @@ class Request
         if ( $this->headers->is($checkHeader) ) {
             $header = $this->headers->get($checkHeader, 'ctype_alnum');
         }
-        
+
         return $etag == $header;
     }
-
 
     /**
      * Match client if-modified header
      *
      * @param DateTime $time Current time if omitted
-     *
      * @param string $header 'If-Modified-Since' or 'If-Unmodified-Since'
      *
      * @return bool TRUE if time is earlier than header, FALSE otherwise
      */
     public function matchModified(
-        DateTime $time = NULL,
+        DateTime $time = null,
         $header = 'If-Modified-Since'
-    )
-    {
-        if ( !$time ) $time = new DateTime();
+    ) {
+        if (!$time) {
+            $time = new DateTime();
+        }
+
         assert('$header=="If-Modified-Since"||$header=="If-Unmodified-Since"');
 
         $headerTime = -1;
-        if ( $this->headers->is($header) ) {
+        if ($this->headers->is($header)) {
             $headerTime = strtotime(
                 $this->headers->get($header, '/^[a-zA-Z0-9 ,:+-]*$/')
             );
         }
 
         return (
-            $headerTime !== FALSE
+            $headerTime !== false
             && $headerTime !== -1
             && $time->getTimestamp() < $headerTime
         );
     }
-
 
     /**
      * Check if there are any uploads left unprocessed in request
@@ -375,9 +345,8 @@ class Request
      */
     public function isUpload()
     {
-        return !empty($this->_files);
+        return !empty($this->files);
     }
-
 
     /**
      * Get next upload
@@ -388,7 +357,9 @@ class Request
      */
     public function getNextUpload()
     {
-        if ( !$this->isUpload() ) return NULL;
+        if (!$this->isUpload()) {
+            return null;
+        }
 
         // Get data and apply defualts
         $data = array_merge(
@@ -399,7 +370,7 @@ class Request
                 'tmp_name' => '',
                 'error' => UPLOAD_ERR_OK,
             ),
-            (array)array_shift($this->_files)
+            (array)array_shift($this->files)
         );
 
         // Create Upload object
@@ -411,9 +382,7 @@ class Request
             $data['error']
         );
     }
-
 }
-
 
 if (!function_exists('getallheaders')) {
 
@@ -425,14 +394,14 @@ if (!function_exists('getallheaders')) {
     function getallheaders()
     {
         $headers = array();
-        foreach ( $_SERVER as $key => $val ) {
+        foreach ($_SERVER as $key => $val) {
             if ( strpos($key, 'HTTP_') === 0 ) {
                 $key = str_replace('HTTP_', '', $key);
                 $key = str_replace('_', '-', $key);
                 $headers[$key] = $val;
             }
         }
-        
+
         return $headers;
     }
 }

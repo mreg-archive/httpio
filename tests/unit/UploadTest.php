@@ -1,11 +1,9 @@
 <?php
 namespace itbz\httpio;
 
-
 class UploadTest extends \PHPUnit_Framework_TestCase
 {
-
-    function setUp()
+    public function setUp()
     {
         // Create temporary dir and file for testing
         $this->temporaryFileName = tempnam(sys_get_temp_dir(), 'UploadTest');
@@ -14,66 +12,64 @@ class UploadTest extends \PHPUnit_Framework_TestCase
         mkdir($this->temporaryDir);
     }
 
-
-    function tearDown()
+    public function tearDown()
     {
         // Remove temporary dir and file
         unlink($this->temporaryFileName);
         rmdir($this->temporaryDir);
     }
 
-
     /**
      * Error code triggers exception
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testUploadError()
+    public function testUploadError()
     {
-        $u = new Upload('target', 'temp', 0, 'text/plan', UPLOAD_ERR_INI_SIZE);
+        new Upload('target', 'temp', 0, 'text/plan', UPLOAD_ERR_INI_SIZE);
     }
-
 
     /**
      * Temporary file does not exist
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testFileReadableError()
+    public function testFileReadableError()
     {
-        $u = new Upload('target', 'not-readable-temp-name', 0, 'text/plan', UPLOAD_ERR_OK);
+        new Upload('target', 'not-readable-temp-name', 0, 'text/plan', UPLOAD_ERR_OK);
     }
-
 
     /**
      * Temporary file exists, but is not of size 123
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testFileSizeError()
+    public function testFileSizeError()
     {
-        $u = new Upload('target', $this->temporaryFileName, 123, 'text/plan', UPLOAD_ERR_OK);
-    }    
-
+        new Upload('target', $this->temporaryFileName, 123, 'text/plan', UPLOAD_ERR_OK);
+    }
 
     /**
      * Unvalid type triggers exception
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testTypeError()
+    public function testTypeError()
     {
-        $u = new Upload('target', $this->temporaryFileName, 0, 'text', UPLOAD_ERR_OK);
+        new Upload('target', $this->temporaryFileName, 0, 'text', UPLOAD_ERR_OK);
     }
-    
 
     /**
      * Temporary file exists, but is not uploaded
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testIsUploadedFileError()
+    public function testIsUploadedFileError()
     {
-        $u = new Upload('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
+         new Upload('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
     }
 
-
-    function testSetGetTargetName()
+    public function testSetGetTargetName()
     {
         $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $this->assertEquals('target', $u->getTargetName());
@@ -82,45 +78,42 @@ class UploadTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $u->getTargetName());
     }
 
-
-    function testSanitizeName()
+    public function testSanitizeName()
     {
         $u = new UploadMock('target<b>', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $this->assertEquals('target', $u->getTargetName());
     }
 
-
-    function testGetTempNameAndType()
+    public function testGetTempNameAndType()
     {
         $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $this->assertEquals($this->temporaryFileName, $u->getTempName());
         $this->assertEquals('text/plan', $u->getType());
     }
 
-
     /**
      * Target dir does not exist
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testMoveToDirError()
+    public function testMoveToDirError()
     {
         $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $u->moveToDir('unexisting-dir-somewhere');
     }
 
-
     /**
      * Target dir exists but file is not an uploaded file
+     * 
      * @expectedException itbz\httpio\Exception\FileUploadException
      */
-    function testMoveToDirNotUploaded()
+    public function testMoveToDirNotUploaded()
     {
         $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $u->moveToDir($this->temporaryDir);
     }
 
-
-    function testMoveToDir()
+    public function testMoveToDir()
     {
         $u = new UploadCopyFile('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
 
@@ -131,21 +124,19 @@ class UploadTest extends \PHPUnit_Framework_TestCase
         unlink($fname);
     }
 
-
-    function testGetContents()
+    public function testGetContents()
     {
         $u = new UploadMock('target', $this->temporaryFileName, 0, 'text/plan', UPLOAD_ERR_OK);
         $data = $u->getContents();
         $this->assertEquals('', $data);
     }
-
 }
 
 class UploadMock extends Upload
 {
     protected function isUploadedFile($fname)
     {
-        return TRUE;
+        return true;
     }
 }
 

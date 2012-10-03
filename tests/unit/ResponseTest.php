@@ -1,25 +1,21 @@
 <?php
 namespace itbz\httpio;
 
-
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
-
-    function testGetStatusDesc()
+    public function testGetStatusDesc()
     {
         $this->assertEquals('Continue', Response::getStatusDesc(100));
     }
 
-
-    function testToCamelCase()
+    public function testToCamelCase()
     {
         $this->assertEquals('Foo', Response::toCamelCase('foo'));
         $this->assertEquals('Content-Type', Response::toCamelCase('content-type'));
         $this->assertEquals('Content-Type', Response::toCamelCase('CONTENT-type'));
     }
 
-
-    function testSetGetStatus()
+    public function testSetGetStatus()
     {
         $response = new Response();
         $this->assertSame(200, $response->getStatus());
@@ -28,36 +24,33 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(404, $response->getStatus());
     }
 
-
-    function testGetStatusHeader()
+    public function testGetStatusHeader()
     {
         $response = new Response();
 
-        if (strpos(PHP_SAPI, 'fcgi') !== FALSE) {
+        if (strpos(PHP_SAPI, 'fcgi') !== false) {
             $this->assertEquals('Status: 200 OK', $response->getStatusHeader());
         } else {
             $this->assertEquals('HTTP/1.1 200 OK', $response->getStatusHeader());
         }
     }
 
-
-    function testContent()
+    public function testContent()
     {
         $response = new Response();
-        $this->assertSame('', $response->getContent());    
+        $this->assertSame('', $response->getContent());
 
         $response->addContent('yo');
-        $this->assertSame('yo', $response->getContent());    
+        $this->assertSame('yo', $response->getContent());
 
         $response->setContent('foobar');
-        $this->assertSame('foobar', $response->getContent());    
+        $this->assertSame('foobar', $response->getContent());
 
         $response->clearContent('foobar');
-        $this->assertSame('', $response->getContent());    
+        $this->assertSame('', $response->getContent());
     }
 
-    
-    function testSetGetHeader()
+    public function testSetGetHeader()
     {
         $response = new Response();
         $this->assertSame('', $response->getHeader('Foo'));
@@ -73,8 +66,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foobar', $response->getHeader('Foo'));
     }
 
-
-    function testAddHeader()
+    public function testAddHeader()
     {
         $response = new Response();
         $response->addHeader('Foo', 'foo');
@@ -82,8 +74,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('foo, bar', $response->getHeader('Foo'));
     }
 
-    
-    function testIsHeader()
+    public function testIsHeader()
     {
         $response = new Response();
         $this->assertFalse($response->isHeader('Foo'));
@@ -95,8 +86,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($response->isHeader('FOO'));
     }
 
-
-    function testRemoveHeader()
+    public function testRemoveHeader()
     {
         $response = new Response();
 
@@ -114,8 +104,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($response->isHeader('Foo'));
     }
 
-
-    function testGetHeaders()
+    public function testGetHeaders()
     {
         $response = new Response();
         $response->setHeader('Foo', 'bar');
@@ -129,13 +118,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getHeaders());
     }
 
-
-
-    function testAddWarning()
+    public function testAddWarning()
     {
         $response = new Response();
-        $response->addWarning('foo');    
-        $response->addWarning('bar');    
+        $response->addWarning('foo');
+        $response->addWarning('bar');
 
         $expected = array(
             'Warning: 199 foo',
@@ -144,12 +131,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getHeaders());
     }
 
-
-    function testAddPersistentWarning()
+    public function testAddPersistentWarning()
     {
         $response = new Response();
-        $response->addPersistentWarning('foo');    
-        $response->addPersistentWarning('bar');    
+        $response->addPersistentWarning('foo');
+        $response->addPersistentWarning('bar');
 
         $expected = array(
             'Warning: 299 foo',
@@ -158,8 +144,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getHeaders());
     }
 
-
-    function testSetFile()
+    public function testSetFile()
     {
         $response = new Response();
         $response->setFile('contents', 'download.txt');
@@ -173,8 +158,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getHeaders());
     }
 
-
-    function testConstructor()
+    public function testConstructor()
     {
         $response = new Response('content', '201', array('Foo' => 'bar'));
         $this->assertSame('content', $response->getContent());
@@ -186,14 +170,12 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getHeaders());
     }
 
-    
-    function testSend()
+    public function testSend()
     {
         ob_start();
         $response = new Response('content', 200, array('Foo' => 'bar'));
         $response->send();
-        $this->assertEquals('content', ob_get_contents());        
+        $this->assertEquals('content', ob_get_contents());
         ob_end_clean();
     }
-
 }

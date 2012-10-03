@@ -8,13 +8,13 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
  * @package httpio
  */
+
 namespace itbz\httpio;
+
 use itbz\httpio\Exception\DataNotSetException;
 use itbz\httpio\Exception\DataNotValidException;
-
 
 /**
  * Class for storing and validating unclean data.
@@ -27,14 +27,12 @@ use itbz\httpio\Exception\DataNotValidException;
  */
 class Laundromat
 {
-
     /**
      * Internal data store
      *
      * @var array
      */
-    private $_data;
-
+    private $data;
 
     /**
      * Set associative array with data.
@@ -47,9 +45,8 @@ class Laundromat
      */
     public function __construct(array $data)
     {
-        $this->_data = array_change_key_case($data);
+        $this->data = array_change_key_case($data);
     }
-
 
     /**
      * Remove data associated with $key
@@ -62,9 +59,8 @@ class Laundromat
     {
         assert('is_string($key)');
         $key = strtolower($key);
-        unset($this->_data[$key]);
+        unset($this->data[$key]);
     }
-
 
     /**
      * Check if $key is set
@@ -77,9 +73,9 @@ class Laundromat
     {
         assert('is_string($key)');
         $key = strtolower($key);
-        return isset($this->_data[$key]);
-    }
 
+        return isset($this->data[$key]);
+    }
 
     /**
      * Get filtered value from $key.
@@ -90,13 +86,11 @@ class Laundromat
      * if it matches the expression. NOTE: delimiter must always be '/'
      *
      * @param string $key
-     *
      * @param mixed $filter
      *
      * @return mixed The data associated with $key
      *
      * @throws DataNotSetException if data is not set
-     *
      * @throws DataNotValidException if unvalid data is held back
      */
     public function get($key, $filter)
@@ -109,21 +103,24 @@ class Laundromat
             throw new DataNotSetException($msg, 400);
         }
 
-        $value = $this->_data[$key];
+        $value = $this->data[$key];
 
-        // Use callback function
         if (is_callable($filter)) {
+            // Use callback function
             if ($filter($value)) {
+
                 return $value;
             }
 
-        // Use sanitising filter
         } elseif (is_long($filter)) {
+            // Use sanitising filter
+
             return filter_var($value, $filter);
 
-        // Use regular expression
         } elseif (is_string($filter) && is_scalar($value)) {
+            // Use regular expression
             if (preg_match($filter, $value)) {
+
                 return $value;
             }
         }
@@ -132,5 +129,4 @@ class Laundromat
         $msg = "Request data for key '$key' not valid.";
         throw new DataNotValidException($msg, 400);
     }
-
 }

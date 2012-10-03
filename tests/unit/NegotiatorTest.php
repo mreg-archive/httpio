@@ -1,13 +1,12 @@
 <?php
 namespace itbz\httpio;
 
-
 class NegotiatorTest extends \PHPUnit_Framework_TestCase
 {
-
-    function testParseRawAccept()
+    public function testParseRawAccept()
     {
-        $arr = Negotiator::parseRawAccept("application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png");
+        $accept = "application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png";
+        $arr = Negotiator::parseRawAccept($accept);
 
         $expected = array(
             'application/xml' => 1.0,
@@ -16,12 +15,11 @@ class NegotiatorTest extends \PHPUnit_Framework_TestCase
             'text/plain' => 0.8,
             'image/png' => 1.0,
         );
-        
+
         $this->assertSame($expected, $arr);
     }
 
-
-    function testMergeRegion()
+    public function testMergeRegion()
     {
         $arr = Negotiator::parseRawAccept("en-US,en;q=0.9,sv");
         $arr = Negotiator::mergeRegion($arr);
@@ -32,45 +30,47 @@ class NegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $arr);
     }
 
-
-    function testNegotiateArray()
+    public function testNegotiateArray()
     {
-        $n = new Negotiator(array(
-            'sv'=>1.0,
-            'en'=>1.0
-        ));
-        
+        $n = new Negotiator(
+            array(
+                'sv'=>1.0,
+                'en'=>1.0
+            )
+        );
+
         $user = array(
             'en' => 0.9,
             'sv' => 1.0
         );
-        
+
         $this->assertSame('sv', $n->negotiateArray($user));
         $this->assertEquals($user, $n->getResult());
     }
 
-    
-    function testNegotiate()
+    public function testNegotiate()
     {
-        $n = new Negotiator(array(
-            'text/html'=>1.0,
-            'application/xhtml+xml'=>1.0
-        ));
-        
+        $n = new Negotiator(
+            array(
+                'text/html'=>1.0,
+                'application/xhtml+xml'=>1.0
+            )
+        );
+
         $result = $n->negotiate("application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png");
-        
+
         $this->assertSame('application/xhtml+xml', $result);
     }
 
-
-    function testNegotiateNoMatch()
+    public function testNegotiateNoMatch()
     {
         // text/html is the default
-        $n = new Negotiator(array(
-            'text/html'=>1.0,
-            'application/xhtml+xml'=>1.0
-        ));
+        $n = new Negotiator(
+            array(
+                'text/html'=>1.0,
+                'application/xhtml+xml'=>1.0
+            )
+        );
         $this->assertSame('text/html', $n->negotiate(""));
     }
-
 }

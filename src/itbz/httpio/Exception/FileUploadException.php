@@ -8,20 +8,15 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
- * @package httpio
- *
- * @subpackage Exception
+ * @package httpio\Exception
  */
-namespace itbz\httpio\Exception;
 
+namespace itbz\httpio\Exception;
 
 /**
  * Exception for handling file upload exception
  *
- * @package httpio
- *
- * @subpackage Exception
+ * @package httpio\Exception
  */
 class FileUploadException extends \itbz\httpio\Exception
 {

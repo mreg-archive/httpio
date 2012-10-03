@@ -1,15 +1,15 @@
 <?php
 namespace itbz\httpio;
 
-
 class LaundromatTest extends \PHPUnit_Framework_TestCase
 {
-
-    function testIsReset()
+    public function testIsReset()
     {
-        $l = new Laundromat(array(
-            'bar' => 'bar'
-        ));
+        $l = new Laundromat(
+            array(
+                'bar' => 'bar'
+            )
+        );
 
         // 'foo' is not a valid key
         $this->assertFalse($l->is('foo'));
@@ -23,35 +23,36 @@ class LaundromatTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($l->is('bar'));
     }
 
-
     /**
      * @expectedException itbz\httpio\Exception\DataNotSetException
      */
-    function testDataNotSetException()
+    public function testDataNotSetException()
     {
         $l = new Laundromat(array());
         $l->get('foo', 'filter...');
     }
 
-
     /**
      * @expectedException itbz\httpio\Exception\DataNotValidException
      */
-    function testDataNotValidException()
+    public function testDataNotValidException()
     {
-        $l = new Laundromat(array(
-            'foo' => 123
-        ));
+        $l = new Laundromat(
+            array(
+                'foo' => 123
+            )
+        );
         $l->get('foo', '/abc/');
     }
 
-
-    function testGet()
+    public function testGet()
     {
-        $l = new Laundromat(array(
-            'bar' => 'bar',
-            'foo' => 'yo/yo'
-        ));
+        $l = new Laundromat(
+            array(
+                'bar' => 'bar',
+                'foo' => 'yo/yo'
+            )
+        );
 
         // Validate using callback function
         $data = $l->get('bar', 'ctype_alpha');
@@ -60,10 +61,9 @@ class LaundromatTest extends \PHPUnit_Framework_TestCase
         // Validate using filter_var filter
         $data = $l->get('bar', FILTER_SANITIZE_STRING);
         $this->assertSame('bar', $data);
- 
+
         // Validate using regular expression
         $data = $l->get('foo', '/^yo\/yo$/');
         $this->assertSame('yo/yo', $data);
     }
-
 }

@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
  * @package httpio
  */
+
 namespace itbz\httpio;
 
 
@@ -21,22 +21,19 @@ namespace itbz\httpio;
  */
 class HeaderParam
 {
-
     /**
      * List of params
      *
      * @var array
      */
-    private $_params = array();
+    private $params = array();
 
-    
     /**
      * Base header param
      *
      * @var string
      */
-    private $_base;
-
+    private $base;
 
     /**
      * Set values from header
@@ -49,27 +46,26 @@ class HeaderParam
         $parts = explode(';', $header);
         foreach ($parts as $part) {
             $subparts = explode('=', $part, 2);
-            
+
             // Trim all subparts
             $subparts = array_map(
-                function($value){
+                function ($value) {
                     return trim($value, " \t\n\r\0\x0B'\"");
                 },
                 $subparts
             );
-            
+
             if (count($subparts) > 1) {
                 // Save parameter
                 list($key, $value) = $subparts;
-                $this->_params[$key] = $value;
+                $this->params[$key] = $value;
             } else {
                 // Save base param
-                $this->_base = $subparts[0];
+                $this->base = $subparts[0];
             }
         }
     }
 
-    
     /**
      * Get header base param
      *
@@ -77,9 +73,8 @@ class HeaderParam
      */
     public function getBase()
     {
-        return $this->_base;
+        return $this->base;
     }
-
 
     /**
      * Get parameter from name
@@ -90,7 +85,6 @@ class HeaderParam
      */
     public function getParam($name)
     {
-        return isset($this->_params[$name]) ? $this->_params[$name] : '';
+        return isset($this->params[$name]) ? $this->params[$name] : '';
     }
-
 }

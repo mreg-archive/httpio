@@ -8,11 +8,10 @@
  * file that was distributed with this source code.
  *
  * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
  * @package httpio
  */
-namespace itbz\httpio;
 
+namespace itbz\httpio;
 
 /**
  * Content negotiation class
@@ -21,22 +20,19 @@ namespace itbz\httpio;
  */
 class Negotiator
 {
-
     /**
      * Array of supported values
      *
      * @var array
      */
-    private $_supported;
-
+    private $supported;
 
     /**
      * Complete result from the last negotiation
      *
      * @var array
      */
-    private $_result = array();
-
+    private $result = array();
 
     /**
      * Load supported values
@@ -47,9 +43,8 @@ class Negotiator
      */
     public function __construct(array $supported)
     {
-        $this->_supported = $supported;
+        $this->supported = $supported;
     }
-
 
     /**
      * Negotiate from raw accept string
@@ -62,9 +57,9 @@ class Negotiator
     {
         assert('is_string($accept)');
         $accept = self::parseRawAccept($accept);
+
         return $this->negotiateArray($accept);
     }
-
 
     /**
      * Get the complete result from the last negotiation
@@ -73,9 +68,8 @@ class Negotiator
      */
     public function getResult()
     {
-        return $this->_result;
+        return $this->result;
     }
-
 
     /**
      * Negotiate from array of user acceptable values.
@@ -91,31 +85,32 @@ class Negotiator
      */
     public function negotiateArray(array $accept)
     {
-        $this->_result = array();
-        
+        $this->result = array();
+
         // Sort based on q-values
         arsort($accept, SORT_NUMERIC);
-        
+
         foreach ($accept as $type => $q) {
             if ($q == 0) {
                 continue;
             }
-            if (isset( $this->_supported[$type] )) {
-                $this->_result[$type] = $q;
+            if (isset( $this->supported[$type] )) {
+                $this->result[$type] = $q;
             }
         }
-        
-        if ( count($this->_result) == 0 ) {
+
+        if ( count($this->result) == 0 ) {
             // If no match use first supported
-            reset($this->_supported);
-            return key($this->_supported);
+            reset($this->supported);
+
+            return key($this->supported);
         } else {
             // Else return match with highest q-value
-            reset($this->_result);
-            return key($this->_result);
+            reset($this->result);
+
+            return key($this->result);
         }
     }
-
 
     /**
      * Parses an accept string.
@@ -125,7 +120,7 @@ class Negotiator
      * @return array Returns an array with the accept types as keys, and
      * q-values as value (float).
      */
-    static public function parseRawAccept($accept)
+    public static function parseRawAccept($accept)
     {
         assert('is_string($accept)');
 
@@ -135,7 +130,7 @@ class Negotiator
             $type = explode(';', $type);
             $name = array_shift($type);
             $q = 1.0;
-            
+
             // Loop the rest of $type trying to read q-values
             $qValueRegexp = '/^\s*q\s*=\s*([0-9.]+)\s*$/';
             foreach ($type as $param) {
@@ -143,14 +138,13 @@ class Negotiator
                     $q = floatval($matches[1]);
                 }
             }
-            
+
             // Save result
             $parsed[$name] = $q;
         }
-        
+
         return $parsed;
     }
-
 
     /**
      * Merge region information in parsed language accept string
@@ -164,7 +158,7 @@ class Negotiator
      *
      * @return array
      */
-    static public function mergeRegion(array $values)
+    public static function mergeRegion(array $values)
     {
         $arrReturn = array();
         foreach ($values as $key => $val) {
@@ -182,5 +176,4 @@ class Negotiator
         }
         return $arrReturn;
     }
-
 }
