@@ -43,7 +43,7 @@ currently ingored).
          'application/xhtml+xml' => 1.0
     ));
 
-Perform negotioation by calling negotiate with the proper header value
+Perform negotiation by calling negotiate with the proper header value
     
     $acceptHeader = $request->headers->get('Accept', FILTER_SANITIZE_STRING);
     $contentType = $negotiator->negotiate($acceptHeader);
