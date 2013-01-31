@@ -1,5 +1,5 @@
 <?php
-namespace itbz\httpio;
+namespace iio\httpio;
 
 class NegotiatorTest extends \PHPUnit_Framework_TestCase
 {

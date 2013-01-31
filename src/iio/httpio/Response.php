@@ -11,7 +11,7 @@
  * @package httpio
  */
 
-namespace itbz\httpio;
+namespace iio\httpio;
 
 /**
  * Lightweight HTTP Response obect

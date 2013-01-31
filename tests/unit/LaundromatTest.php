@@ -1,5 +1,5 @@
 <?php
-namespace itbz\httpio;
+namespace iio\httpio;
 
 class LaundromatTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class LaundromatTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException itbz\httpio\Exception\DataNotSetException
+     * @expectedException iio\httpio\Exception\DataNotSetException
      */
     public function testDataNotSetException()
     {
@@ -33,7 +33,7 @@ class LaundromatTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException itbz\httpio\Exception\DataNotValidException
+     * @expectedException iio\httpio\Exception\DataNotValidException
      */
     public function testDataNotValidException()
     {

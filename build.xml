@@ -104,12 +104,14 @@
             command="php composer.phar self-update"
             dir="${APP_ROOT}"
             checkreturn="true"
+            passthru="true"
             />
         <echo msg="Updating dependencies using composer..."/>
         <exec
             command="php composer.phar update"
             dir="${APP_ROOT}"
             checkreturn="true"
+            passthru="true"
             />
     </target>
 
@@ -125,6 +127,7 @@
                     command="php composer.phar install --dev"
                     dir="${APP_ROOT}"
                     checkreturn="true"
+                    passthru="true"
                     />
             </else>
         </if>
@@ -142,6 +145,7 @@
                     command="curl -s http://getcomposer.org/installer | php"
                     dir="${APP_ROOT}"
                     checkreturn="true"
+                    passthru="true"
                     />
             </else>
         </if>

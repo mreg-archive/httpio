@@ -1,8 +1,8 @@
 <?php
-namespace itbz\httpio;
+namespace iio\httpio;
 
 use DateTime;
-use itbz\httpio\Exception\FileUploadException;
+use iio\httpio\Exception\FileUploadException;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +34,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException itbz\httpio\Exception
+     * @expectedException iio\httpio\Exception
      */
     public function testMethodUnknownError()
     {

@@ -1,5 +1,5 @@
 <?php
-namespace itbz\httpio;
+namespace iio\httpio;
 
 class UploadTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Error code triggers exception
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testUploadError()
     {
@@ -32,7 +32,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Temporary file does not exist
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testFileReadableError()
     {
@@ -42,7 +42,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Temporary file exists, but is not of size 123
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testFileSizeError()
     {
@@ -52,7 +52,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Unvalid type triggers exception
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testTypeError()
     {
@@ -62,7 +62,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Temporary file exists, but is not uploaded
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testIsUploadedFileError()
     {
@@ -94,7 +94,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Target dir does not exist
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testMoveToDirError()
     {
@@ -105,7 +105,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     /**
      * Target dir exists but file is not an uploaded file
      * 
-     * @expectedException itbz\httpio\Exception\FileUploadException
+     * @expectedException iio\httpio\Exception\FileUploadException
      */
     public function testMoveToDirNotUploaded()
     {

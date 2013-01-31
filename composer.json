@@ -1,8 +1,8 @@
 {
-    "name": "itbz/httpio",
+    "name": "iio/httpio",
     "description": "Simple HTTP input/output library",
     "keywords": ["http", "input validation", "content negotiation"],
-    "homepage": "https://github.com/itbz/httpio",
+    "homepage": "https://github.com/iio/httpio",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-0": {
-            "itbz\\httpio": "src/"
+            "iio\\httpio": "src/"
         }
     }
 }

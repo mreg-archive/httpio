@@ -11,13 +11,13 @@
  * @package httpio\Exception
  */
 
-namespace itbz\httpio\Exception;
+namespace iio\httpio\Exception;
 
 /**
- * Exception for handling unvalid request data
+ * Exception for handling missing request data
  *
  * @package httpio\Exception
  */
-class DataNotValidException extends \itbz\httpio\Exception
+class DataNotSetException extends \iio\httpio\Exception
 {
 }

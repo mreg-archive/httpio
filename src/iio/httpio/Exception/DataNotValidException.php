@@ -11,13 +11,13 @@
  * @package httpio\Exception
  */
 
-namespace itbz\httpio\Exception;
+namespace iio\httpio\Exception;
 
 /**
- * Exception for handling file upload exception
+ * Exception for handling unvalid request data
  *
  * @package httpio\Exception
  */
-class FileUploadException extends \itbz\httpio\Exception
+class DataNotValidException extends \iio\httpio\Exception
 {
 }

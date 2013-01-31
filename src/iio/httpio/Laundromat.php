@@ -11,10 +11,10 @@
  * @package httpio
  */
 
-namespace itbz\httpio;
+namespace iio\httpio;
 
-use itbz\httpio\Exception\DataNotSetException;
-use itbz\httpio\Exception\DataNotValidException;
+use iio\httpio\Exception\DataNotSetException;
+use iio\httpio\Exception\DataNotValidException;
 
 /**
  * Class for storing and validating unclean data.
