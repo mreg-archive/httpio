@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio
  */
 
 namespace iio\httpio;
@@ -19,14 +16,13 @@ namespace iio\httpio;
  * Encapsulates HTTP headers and script output in a HTTP context. Very useful
  * for unit testing.
  *
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  * @package httpio
  */
 class Response
 {
     /**
-     * List of valid status codes and descriptions
-     *
-     * @var array
+     * @var array List of valid status codes and descriptions
      */
     private static $statusCodes = array(
         100 => "Continue",
@@ -72,39 +68,31 @@ class Response
     );
 
     /**
-     * The response body
-     *
-     * @var string
+     * @var string The response body
      */
     private $body;
 
     /**
-     * Http response status code
-     *
-     * @var int
+     * @var int Http response status code
      */
     private $statusCode;
 
     /**
-     * Http response status description
-     *
-     * @var string
+     * @var string Http response status description
      */
     private $statusText;
 
     /**
-     * List of headers
-     *
-     * @var array
+     * @var array List of headers
      */
     private $headers = array();
 
     /**
-     * Construct response from input
+     * Constructor
      *
      * @param string $content
-     * @param int $status
-     * @param array $headers Associative array of headers
+     * @param int    $status
+     * @param array  $headers Associative array of headers
      */
     public function __construct(
         $content = '',
@@ -121,9 +109,8 @@ class Response
     /**
      * Set http status code
      *
-     * @param int $code
-     * @param string $description
-     *
+     * @param  int    $code
+     * @param  string $description
      * @return void
      */
     public function setStatus($code, $description = '')
@@ -164,8 +151,7 @@ class Response
     /**
      * Replace response body with content
      *
-     * @param string $content
-     *
+     * @param  string $content
      * @return void
      */
     public function setContent($content)
@@ -187,8 +173,7 @@ class Response
     /**
      * Add content to response body
      *
-     * @param string $content
-     *
+     * @param  string $content
      * @return void
      */
     public function addContent($content)
@@ -211,9 +196,8 @@ class Response
      *
      * Existing headers with the same same will be overwritten
      *
-     * @param string $name
-     * @param string $value
-     *
+     * @param  string $name
+     * @param  string $value
      * @return void
      */
     public function setHeader($name, $value)
@@ -229,9 +213,8 @@ class Response
      *
      * Existing headers with the same same will NOT be overwritten
      *
-     * @param string $name
-     * @param string $value
-     *
+     * @param  string $name
+     * @param  string $value
      * @return void
      */
     public function addHeader($name, $value)
@@ -249,8 +232,7 @@ class Response
     /**
      * Get the value of a specific header
      *
-     * @param string $name Case-insensitive.
-     *
+     * @param  string $name Case-insensitive.
      * @return string
      */
     public function getHeader($name)
@@ -268,8 +250,7 @@ class Response
     /**
      * Return true if header is set
      *
-     * @param string $name Name of header, case-insensitive
-     *
+     * @param  string $name Name of header, case-insensitive
      * @return bool
      */
     public function isHeader($name)
@@ -283,8 +264,7 @@ class Response
     /**
      * Remove header
      *
-     * @param string $name Name of header, case-insensitive
-     *
+     * @param  string $name Name of header, case-insensitive
      * @return void
      */
     public function removeHeader($name)
@@ -313,8 +293,7 @@ class Response
     /**
      * Add a warning header
      *
-     * @param string $msg
-     *
+     * @param  string $msg
      * @return void
      */
     public function addWarning($msg)
@@ -326,8 +305,7 @@ class Response
     /**
      * Add a persistent warning header
      *
-     * @param string $msg
-     *
+     * @param  string $msg
      * @return void
      */
     public function addPersistentWarning($msg)
@@ -339,12 +317,11 @@ class Response
     /**
      * Send a file to user.
      *
-     * @param string $data File contents
-     * @param string $fname File name to send in Content-Disposition header
-     * @param string $ctype Content type, defaults to application/x-download
-     * @param string $cdisp Content disposition type. 'attachment' or 'inline',
-     * defaults to 'attachment'
-     *
+     * @param  string $data  File contents
+     * @param  string $fname File name to send in Content-Disposition header
+     * @param  string $ctype Content type, defaults to application/x-download
+     * @param  string $cdisp Content disposition type. 'attachment' or 'inline',
+     *     defaults to 'attachment'
      * @return void
      */
     public function setFile(
@@ -384,8 +361,7 @@ class Response
     /**
      * Convert string to camel case
      *
-     * @param string $str
-     *
+     * @param  string $str
      * @return string
      */
     public static function toCamelCase($str)
@@ -404,8 +380,7 @@ class Response
     /**
      * Get text description of http status code
      *
-     * @param int $code
-     *
+     * @param  int    $code
      * @return string
      */
     public static function getStatusDesc($code)

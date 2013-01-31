@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio
  */
 
 namespace iio\httpio;
@@ -17,26 +14,23 @@ namespace iio\httpio;
 /**
  * Helper class to read ; separated params from headers
  *
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  * @package httpio
  */
 class HeaderParam
 {
     /**
-     * List of params
-     *
-     * @var array
+     * @var array List of params
      */
     private $params = array();
 
     /**
-     * Base header param
-     *
-     * @var string
+     * @var string Base header param
      */
     private $base;
 
     /**
-     * Set values from header
+     * Construct
      *
      * @param string $header
      */
@@ -79,8 +73,7 @@ class HeaderParam
     /**
      * Get parameter from name
      *
-     * @param string $name
-     *
+     * @param  string $name
      * @return string
      */
     public function getParam($name)

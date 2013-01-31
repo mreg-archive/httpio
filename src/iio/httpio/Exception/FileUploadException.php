@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio\Exception
  */
 
 namespace iio\httpio\Exception;
@@ -16,7 +13,8 @@ namespace iio\httpio\Exception;
 /**
  * Exception for handling file upload exception
  *
- * @package httpio\Exception
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @package httpio
  */
 class FileUploadException extends \iio\httpio\Exception
 {

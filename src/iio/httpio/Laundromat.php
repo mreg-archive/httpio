@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio
  */
 
 namespace iio\httpio;
@@ -23,6 +20,7 @@ use iio\httpio\Exception\DataNotValidException;
  * differing only in case will be treated as identical and the former key-data
  * pair will be overwritten.
  *
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  * @package httpio
  */
 class Laundromat

@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package httpio
  */
 
 namespace iio\httpio;
@@ -18,16 +15,13 @@ use DateTime;
 /**
  * Lightweight HTTP Request object
  *
- * @uses Laundromat
- *
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  * @package httpio
  */
 class Request
 {
     /**
-     * List of valid HTTP methods
-     *
-     * @var array
+     * @var array List of valid HTTP methods
      */
     private static $validMethods = array(
         'HEAD', 'GET', 'POST', 'PUT', 'DELETE',
@@ -35,72 +29,52 @@ class Request
     );
 
     /**
-     * Remote request ip address
-     *
-     * @var string
+     * @var string Remote request ip address
      */
     private $ip;
 
     /**
-     * Request uri Filled in __construct().
-     *
-     * @var string
+     * @var string Request uri Filled in __construct()
      */
     private $uri;
 
     /**
-     * Request method. Filled in __construct().
-     *
-     * @var string
+     * @var string Request method. Filled in __construct()
      */
     private $method;
 
     /**
-     * Request content type
-     *
-     * @var string
+     * @var string Request content type
      */
     private $contentType = 'text/plain';
 
     /**
-     * Request charset
-     *
-     * @var string
+     * @var string Request charset
      */
     private $charset = '';
 
     /**
-     * Request headers Laundromat object
-     *
-     * @var Laundromat
+     * @var Laundromat Request headers Laundromat object
      */
     public $headers;
 
     /**
-     * Request cookies Laundromat object
-     *
-     * @var Laundromat
+     * @var Laundromat Request cookies Laundromat object
      */
     public $cookies;
 
     /**
-     * Request query Laundromat object
-     *
-     * @var Laundromat
+     * @var Laundromat Request query Laundromat object
      */
     public $query;
 
     /**
-     * Request body Laundromat object
-     *
-     * @var Laundromat
+     * @var Laundromat Request body Laundromat object
      */
     public $body;
 
     /**
-     * Uploaded files info
-     *
-     * @var array
+     * @var array Uploaded files info
      */
     private $files;
 
@@ -111,7 +85,6 @@ class Request
      */
     public static function createFromGlobals()
     {
-        // Get values
         $get = $_GET;
         $post = $_POST;
         $cookie = $_COOKIE;
@@ -163,17 +136,16 @@ class Request
     }
 
     /**
-     * Set values at contruct
+     * Constructor
      *
-     * @param string $ip
-     * @param string $uri
-     * @param string $method
-     * @param array $headers
-     * @param array $cookies
-     * @param array $query
-     * @param array $body
-     * @param array $files
-     *
+     * @param  string    $ip
+     * @param  string    $uri
+     * @param  string    $method
+     * @param  array     $headers
+     * @param  array     $cookies
+     * @param  array     $query
+     * @param  array     $body
+     * @param  array     $files
      * @throws Exception If request method is uknown
      */
     public function __construct(
@@ -253,8 +225,7 @@ class Request
     /**
      * Check if request method equals $method
      *
-     * @param string $method
-     *
+     * @param  string $method
      * @return bool
      */
     public function isMethod($method)
@@ -288,10 +259,9 @@ class Request
     /**
      * Match ETag against client If-Match header
      *
-     * @param string $etag
-     * @param string $checkHeader Header to check, 'If-Match' or 'If-None-Match'
-     *
-     * @return bool TRUE if $etag matches, FALSE otherwise
+     * @param  string $etag
+     * @param  string $checkHeader Header to check, 'If-Match' or 'If-None-Match'
+     * @return bool   TRUE if $etag matches, FALSE otherwise
      */
     public function matchEtag($etag, $checkHeader = "If-Match")
     {
@@ -309,10 +279,9 @@ class Request
     /**
      * Match client if-modified header
      *
-     * @param DateTime $time Current time if omitted
-     * @param string $header 'If-Modified-Since' or 'If-Unmodified-Since'
-     *
-     * @return bool TRUE if time is earlier than header, FALSE otherwise
+     * @param  DateTime $time   Current time if omitted
+     * @param  string   $header 'If-Modified-Since' or 'If-Unmodified-Since'
+     * @return bool     TRUE    if time is earlier than header, FALSE otherwise
      */
     public function matchModified(
         DateTime $time = null,
@@ -351,9 +320,8 @@ class Request
     /**
      * Get next upload
      *
-     * @return Upload NULL if no more uploadeds exist
-     *
-     * @throws FileUploadException if there was an file upload error
+     * @return Upload              NULL if no more uploadeds exist
+     * @throws FileUploadException If there was an file upload error
      */
     public function getNextUpload()
     {
